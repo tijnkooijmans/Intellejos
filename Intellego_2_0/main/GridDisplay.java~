@@ -1,0 +1,61 @@
+package main;
+
+import interfaces.*;
+import simworldobjects.*;
+
+import javax.swing.*;
+import java.awt.image.*;
+import java.awt.*;
+import java.lang.*;
+import java.util.*;
+import java.awt.geom.*;
+
+/**
+* Provides a simple display for any SimWorld
+*
+* @author Simon Zienkiewicz
+*/
+public class GridDisplay extends SimDisplay
+{
+	private int width;
+	private int height;
+        private BasicStroke stroke;
+	private Color color;
+        private int gridSize=5;
+                    
+	/**
+	* Sets up this display
+	*
+	* @param s the SimWorld to be displayed
+	*/
+	public GridDisplay(int size, int width, int height, Color color)
+	{
+		gridSize = size;
+                this.width = width;
+                this.height = height;
+                this.color = color;
+                System.out.println("Constructor");
+	}
+	
+	/**
+	* Main repaint method
+	*/
+	public void paintComponent(Graphics g)
+	{
+            // paint background
+            super.paintComponent(g);
+            //sets the bounds of the image to that of the size of the world
+
+            for(int a=0;a*gridSize<=width;a++){
+                for(int b=0; b*gridSize<=height;b++){
+                    System.out.println("size1= "+a*gridSize+" size2= "+b*gridSize);
+                    g.drawOval(a*gridSize,b*gridSize, 2,2);
+                    System.out.println("drawn circle");
+                }
+            }
+
+            // draw a shape for each object
+	}
+}
+	
+	

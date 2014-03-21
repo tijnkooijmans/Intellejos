@@ -1,0 +1,13 @@
+========================
+  Intellego Log File
+========================
+
+System started on: Thu Feb 17 19:52:34
+
+Messages:
+
+Intellego.main(): GUI set up successfully
+SimUI.createController(): class ZincRocker: CREATED SUCCESSFULLY
+SimUI.addController: C is not null
+SimUI.run(): Started controller
+MainInterface.init(): System quitting

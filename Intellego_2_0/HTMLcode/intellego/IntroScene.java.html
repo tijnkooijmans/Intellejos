@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.0.9">
+<TITLE>intellego.IntroScene (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">IntroScene</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1   </FONT><A NAME="1"></A><FONT ID="MultiLineComment">/*
+<FONT ID="LN">2   </FONT><A NAME="2"></A> * IntroScene.java
+<FONT ID="LN">3   </FONT><A NAME="3"></A> *
+<FONT ID="LN">4   </FONT><A NAME="4"></A> * Created on August 8, 2003, 3:09 PM
+<FONT ID="LN">5   </FONT><A NAME="5"></A> */</FONT>
+<FONT ID="LN">6   </FONT><A NAME="6"></A>
+<FONT ID="LN">7   </FONT><A NAME="7"></A><FONT ID="Package">package</FONT> <A HREF="../intellego.index.html" target="packageFrame">intellego</A>;
+<FONT ID="LN">8   </FONT><A NAME="8"></A>
+<FONT ID="LN">9   </FONT><A NAME="9"></A><FONT ID="Import">import</FONT> <A HREF="../intellego/Intellego.java.html">intellego.Intellego</A>;
+<FONT ID="LN">10  </FONT><A NAME="10"></A><FONT ID="Import">import</FONT> <A HREF="../util.index.html" target="packageFrame">util.*</A>;
+<FONT ID="LN">11  </FONT><A NAME="11"></A><FONT ID="Import">import</FONT> <A HREF="../interfaces.index.html" target="packageFrame">interfaces.*</A>;
+<FONT ID="LN">12  </FONT><A NAME="12"></A><FONT ID="Import">import</FONT> <A HREF="../real.index.html" target="packageFrame">real.*</A>;
+<FONT ID="LN">13  </FONT><A NAME="13"></A><FONT ID="Import">import</FONT> <A HREF="../main.index.html" target="packageFrame">main.*</A>;
+<FONT ID="LN">14  </FONT><A NAME="14"></A><FONT ID="Import">import</FONT> <A HREF="../NetBeansResources.index.html" target="packageFrame">NetBeansResources.*</A>;
+<FONT ID="LN">15  </FONT><A NAME="15"></A>
+<FONT ID="LN">16  </FONT><A NAME="16"></A><FONT ID="Import">import</FONT> java.awt.*;
+<FONT ID="LN">17  </FONT><A NAME="17"></A><FONT ID="Import">import</FONT> java.lang.*;
+<FONT ID="LN">18  </FONT><A NAME="18"></A><FONT ID="Import">import</FONT> java.awt.event.*;
+<FONT ID="LN">19  </FONT><A NAME="19"></A><FONT ID="Import">import</FONT> javax.swing.*;
+<FONT ID="LN">20  </FONT><A NAME="20"></A><FONT ID="Import">import</FONT> java.io.*;
+<FONT ID="LN">21  </FONT><A NAME="21"></A><FONT ID="Import">import</FONT> javax.imageio.*;
+<FONT ID="LN">22  </FONT><A NAME="22"></A><FONT ID="Import">import</FONT> java.awt.image.*;
+<FONT ID="LN">23  </FONT><A NAME="23"></A>
+<FONT ID="LN">24  </FONT><A NAME="24"></A><FONT ID="FormalComment">/** Loads the introscene while the application is being complied
+<FONT ID="LN">25  </FONT><A NAME="25"></A> * @author Simon Zienkiewicz
+<FONT ID="LN">26  </FONT><A NAME="26"></A> */</FONT>
+<FONT ID="LN">27  </FONT><A NAME="27"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> IntroScene <FONT ID="Extends">extends</FONT> JDialog <FONT ID="Implements">implements</FONT> ActionListener {
+<FONT ID="LN">28  </FONT><A NAME="28"></A>    
+<FONT ID="LN">29  </FONT><A NAME="29"></A>    <FONT ID="Private">private</FONT> Timer exitTimer;
+<FONT ID="LN">30  </FONT><A NAME="30"></A>    
+<FONT ID="LN">31  </FONT><A NAME="31"></A>    <FONT ID="FormalComment">/** Creates a new instance of IntroScene */</FONT>
+<FONT ID="LN">32  </FONT><A NAME="32"></A>    <FONT ID="Public">public</FONT> IntroScene() {
+<FONT ID="LN">33  </FONT><A NAME="33"></A>                
+<FONT ID="LN">34  </FONT><A NAME="34"></A>        <FONT ID="SingleLineComment">//place JDialog in the center of the screen
+<FONT ID="LN">35  </FONT><A NAME="35"></A></FONT>        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+<FONT ID="LN">36  </FONT><A NAME="36"></A>        <FONT ID="This">this</FONT>.setBounds(screenSize.width/<FONT ID="IntegerLiteral">2</FONT>-<FONT ID="IntegerLiteral">200</FONT>,screenSize.height/<FONT ID="IntegerLiteral">2</FONT>-<FONT ID="IntegerLiteral">150</FONT>, <FONT ID="IntegerLiteral">400</FONT>, <FONT ID="IntegerLiteral">300</FONT>);
+<FONT ID="LN">37  </FONT><A NAME="37"></A>        
+<FONT ID="LN">38  </FONT><A NAME="38"></A>        <FONT ID="This">this</FONT>.setResizable(<FONT ID="False">false</FONT>);
+<FONT ID="LN">39  </FONT><A NAME="39"></A>                
+<FONT ID="LN">40  </FONT><A NAME="40"></A>        Container mainPanel=getContentPane();
+<FONT ID="LN">41  </FONT><A NAME="41"></A>        mainPanel.setLayout(<FONT ID="New">new</FONT> BorderLayout(<FONT ID="IntegerLiteral">1</FONT>,<FONT ID="IntegerLiteral">1</FONT>));
+<FONT ID="LN">42  </FONT><A NAME="42"></A>        
+<FONT ID="LN">43  </FONT><A NAME="43"></A>        mainPanel.add(<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/GetImage.java.html">GetImage</A>());
+<FONT ID="LN">44  </FONT><A NAME="44"></A>        <FONT ID="This">this</FONT>.setDefaultLookAndFeelDecorated(<FONT ID="False">false</FONT>);
+<FONT ID="LN">45  </FONT><A NAME="45"></A>        <FONT ID="This">this</FONT>.setUndecorated(<FONT ID="True">true</FONT>);
+<FONT ID="LN">46  </FONT><A NAME="46"></A>                   
+<FONT ID="LN">47  </FONT><A NAME="47"></A>        <FONT ID="This">this</FONT>.show();
+<FONT ID="LN">48  </FONT><A NAME="48"></A>        exitTimer = <FONT ID="New">new</FONT> Timer(<FONT ID="IntegerLiteral">8000</FONT>,<FONT ID="This">this</FONT>);
+<FONT ID="LN">49  </FONT><A NAME="49"></A>        exitTimer.start();
+<FONT ID="LN">50  </FONT><A NAME="50"></A>       
+<FONT ID="LN">51  </FONT><A NAME="51"></A>    }
+<FONT ID="LN">52  </FONT><A NAME="52"></A>    
+<FONT ID="LN">53  </FONT><A NAME="53"></A>    <FONT ID="FormalComment">/** Execution method for timer event.
+<FONT ID="LN">54  </FONT><A NAME="54"></A>     * @param e executed event
+<FONT ID="LN">55  </FONT><A NAME="55"></A>     */</FONT>    
+<FONT ID="LN">56  </FONT><A NAME="56"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e) {
+<FONT ID="LN">57  </FONT><A NAME="57"></A>        <FONT ID="If">if</FONT>(e.getSource() == exitTimer){
+<FONT ID="LN">58  </FONT><A NAME="58"></A>            <FONT ID="This">this</FONT>.dispose();
+<FONT ID="LN">59  </FONT><A NAME="59"></A>            System.exit(<FONT ID="IntegerLiteral">0</FONT>);
+<FONT ID="LN">60  </FONT><A NAME="60"></A>        }
+<FONT ID="LN">61  </FONT><A NAME="61"></A>    }
+<FONT ID="LN">62  </FONT><A NAME="62"></A>    
+<FONT ID="LN">63  </FONT><A NAME="63"></A>    <FONT ID="FormalComment">/** The main class.
+<FONT ID="LN">64  </FONT><A NAME="64"></A>     * @param args arguements
+<FONT ID="LN">65  </FONT><A NAME="65"></A>     */</FONT>    
+<FONT ID="LN">66  </FONT><A NAME="66"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Void">void</FONT> main(String[] args){
+<FONT ID="LN">67  </FONT><A NAME="67"></A>        <A HREF="../intellego/IntroScene.java.html">IntroScene</A> intro = <FONT ID="New">new</FONT> <A HREF="../intellego/IntroScene.java.html">IntroScene</A>();
+<FONT ID="LN">68  </FONT><A NAME="68"></A>    }
+<FONT ID="LN">69  </FONT><A NAME="69"></A>}
+<FONT ID="LN">70  </FONT><A NAME="70"></A></pre><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">IntroScene</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+
+</BODY>
+</HTML>

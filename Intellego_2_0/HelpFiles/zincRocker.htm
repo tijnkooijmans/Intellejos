@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#333333" text="#FFFFFF" link="#FFCC00" vlink="#999966" alink="#FFFF00">
+<blockquote> 
+  <h1><font color="#FFFF00" size="7" face="Verdana, Arial, Helvetica, sans-serif">Sample 
+    Controller File: ZincRocker</font></h1>
+  <hr>
+  <p><font color="#FFFF00" size="+2" face="Verdana, Arial, Helvetica, sans-serif">Introduction:</font></p>
+  <blockquote> 
+    <p><font face="Verdana, Arial, Helvetica, sans-serif">Offered below is a presentation 
+      of the proper use of the <a href="controllerInterface.htm"><font color="#00FF00">Controller 
+      Interface</font></a> as well as the <font color="#FF0080"><a href="abstractRobotFunctions.htm">AbstractRobot 
+      Functions</a></font>.</font></p>
+  </blockquote>
+  <p><font color="#FFFF00" size="+2" face="Verdana, Arial, Helvetica, sans-serif">The 
+    Java Code:</font></p>
+  <blockquote> 
+    <p><code><font color="#FF0000">import interfaces.Controller;<br>
+      import interfaces.AbstractRobot;</font></code></p>
+    <p><code><font color="#0080FF">/**<br>
+      * This sample program rocks the robot, meaning it alternates between moving 
+      the<br>
+      * robot forwards and backwards at the execution of a timer. Also the light 
+      sensor<br>
+      * reading of LEFT SENSOR or S1 is displayed on the LCD whenever a light 
+      change is<br>
+      * detected.<br>
+      *<br>
+      * @author Simon Zienkiewicz<br>
+      */</font><br>
+      <font color="#FF0000">public class ZincRocker extends Controller <br>
+      {</font></code></p>
+    <blockquote> 
+      <p><code><font color="#00FF00">private AbstractRobot zincBot;<br>
+        private boolean running;<br>
+        private int[] sensors={Controller.SENSOR_TYPE_LIGHT,Controller.SENSOR_TYPE_TOUCH,Controller.SENSOR_TYPE_LIGHT};<br>
+        private boolean on = false;<br>
+        int timer1;<br>
+        boolean var = false;</font><br>
+        <br>
+        <font color="#0080FF">/** Creates a new instance of ZincRocker */</font><br>
+        <font color="#00FF00">public ZincRocker()<br>
+        {<br>
+        }</font><br>
+        <br>
+        <font color="#0080FF">/** Initialises controller. It should be noted that 
+        this method will only<br>
+        * ever be called once, whereas run() can be called many times, so any<br>
+        * variables or data structures etc. that are meant to persist in between<br>
+        * stops and starts of the controller's thread, or that should only be<br>
+        * initialised once should be set up from within this method, not in run().<br>
+        *<br>
+        * @param r the AbstractRobot associated with this controller<br>
+        *<br>
+        */</font><br>
+        <font color="#00FF00">public void initController(AbstractRobot r) <br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>zincBot = r;<br>
+          <font color="#0080FF"><br>
+          //creates a timer with a delay of 1000 milli seconds</font><br>
+          timer1 = zincBot<font color="#FF0080">.createTimer(1000);</font></code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code> }</code></font><code><br>
+        <br>
+        <font color="#0080FF">/** Returns the AbstractRobot associated with this 
+        controller<br>
+        *<br>
+        * @return the AbstractRobot<br>
+        *<br>
+        */</font><br>
+        <font color="#00FF00">public AbstractRobot getRobot() <br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>return zincBot;</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code> }</code></font><code><br>
+        <br>
+        <font color="#0080FF">/** Returns an array of the sensors used by this 
+        controller, and the type<br>
+        * of sensor required. This type must be one of the sensor type constants<br>
+        * declared above. The index of the array is used to establish which sensor<br>
+        * is being defined. e.g. if array[0] is SENSOR_TYPE_TOUCH then sensor 
+        1<br>
+        * will be set to a touch sensor. The sensors array *must* be initialised<br>
+        * with the correct values from the outset, and must not be set in<br>
+        * initController(), or any other method. (see example Controllers for<br>
+        * working examples)<br>
+        *<br>
+        * @return the sensor array<br>
+        *<br>
+        */</font><br>
+        <font color="#00FF00">public int[] getSensors() <br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>return sensors;</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}</code></font><code><br>
+        <br>
+        <font color="#0080FF">/** Stops this controller's thread running, i.e. 
+        must allow run() to return<br>
+        * as quickly as possible. However it is acceptable for this method to 
+        do<br>
+        * some housekeeping before stopping the controller, e.g. save some internal<br>
+        * data structure to a file.<br>
+        *<br>
+        */</font><br>
+        <font color="#00FF00">public void halt() <br>
+        { <br>
+        running = false;<br>
+        }</font><br>
+        <br>
+        <font color="#0080FF">/** This method is called whenever a LIGHT SENSOR 
+        detects change from its previous<br>
+        * value.<br>
+        *<br>
+        * @param sensorNumber, this is the LIGHT SENSOR number that called this 
+        method<br>
+        */</font><br>
+        <font color="#00FF00">public void lightSensorListener(int sensorNumber)<br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>if(on){</code></font></p>
+        <blockquote> 
+          <p><font color="#00FF00"><code><font color="#0080FF">//<br>
+            //when LIGHT SENSOR, S1 detects a change this is called<br>
+            //</font><br>
+            if(sensorNumber == AbstractRobot.S1)<br>
+            {</code></font></p>
+          <blockquote> 
+            <p><font color="#00FF00"><code><font color="#0080FF">//display the 
+              colour reading of the sensor on the LCD</font><br>
+              zincBot<font color="#FF0080">.displayNumberLCD(zincBot.getSensor1());</font></code></font></p>
+          </blockquote>
+          <p><font color="#00FF00"><code><br>
+            <font color="#0080FF">//<br>
+            //when LIGHT SENSOR, S3 detects a change this is called<br>
+            //</font><br>
+            else if(sensorNumber == AbstractRobot.S3)<br>
+            {<br>
+            <br>
+            }</code></font></p>
+        </blockquote>
+        <p><font color="#00FF00"><code>}</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}<br>
+        </code></font><code><br>
+        <font color="#0080FF">/** This method is called whenever a TOUCH SENSOR 
+        detects change from its previous<br>
+        * value.<br>
+        *<br>
+        * @param sensorNumber, this is the TOUCH SENSOR number that called this 
+        method<br>
+        */</font><br>
+        <font color="#00FF00">public void touchSensorListener(int sensorNumber)<br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>if(on)<br>
+          {</code></font></p>
+        <blockquote> 
+          <p><font color="#0080FF"><code>//<br>
+            //when TOUCH SENSOR, S2 detects a change this is called<br>
+            //</code></font></p>
+        </blockquote>
+        <p><font color="#00FF00"><code>}</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}</code></font></p>
+      <p><code> <font color="#0080FF">/**<br>
+        * Starts this controller's thread running. The 'real' controller <br>
+        * functionality should be started from here.<br>
+        */</font><br>
+        <font color="#00FF00">public void run()<br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>running = true;<br>
+          <br>
+          <font color="#0080FF">//activates all of the sensore S1, S2, S3</font><br>
+          zincBot<font color="#FF0080">.activate();</font><br>
+          <br>
+          <font color="#0080FF">//prepares the sensor events for accepting events</font><br>
+          on = true;<br>
+          <br>
+          go();</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}</code></font></p>
+      <p><code><font color="#0080FF">/** The true body of the code. Your code 
+        will likely go in this block.<br>
+        *<br>
+        */</font><br>
+        <font color="#00FF00">public void go()<br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code> <font color="#0080FF">//startes the created 
+          timer</font><br>
+          zincBot<font color="#FF0080">.startTimer(timer1);</font></code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}</code></font></p>
+      <p><code><font color="#0080FF">/** Whenever a timer elapses this method 
+        is called and the timer which <br>
+        * elapsed is passed as a parameter<br>
+        *<br>
+        * @param elapsedTimer, the timer which elapsed<br>
+        */</font><br>
+        <font color="#00FF00">public void setTimerExecution(int elapsedTimer) 
+        <br>
+        {</font></code></p>
+      <blockquote> 
+        <p><font color="#00FF00"><code>if(elapsedTimer == timer1)<br>
+          {</code></font></p>
+        <blockquote> 
+          <p><font color="#00FF00"><code><font color="#0080FF">//stop the timer</font><br>
+            zincBot<font color="#FF0080">.stopTimer(timer1);</font><br>
+            <br>
+            <font color="#0080FF">//begin desired execution of the rocking</font><br>
+            if(var)<br>
+            {</code></font></p>
+          <blockquote> 
+            <p><font color="#00FF00"><code><font color="#0080FF">//the robot moves 
+              forward</font><br>
+              zincBot<font color="#FF0080">.forward();</font></code></font></p>
+          </blockquote>
+          <p><font color="#00FF00"><code>}</code></font></p>
+          <p><font color="#00FF00"><code>else<br>
+            {</code></font></p>
+          <blockquote> 
+            <p><font color="#00FF00"><code><font color="#0080FF">//the robot moves 
+              backwards</font><br>
+              zincBot<font color="#FF0080">.backward();</font></code></font></p>
+          </blockquote>
+          <p><font color="#00FF00"><code>}</code></font></p>
+          <p><font color="#00FF00"><code> var = !var;<br>
+            <br>
+            <font color="#0080FF">//start the timer once again</font><br>
+            zincBot<font color="#FF0080">.startTimer(timer1);</font></code></font></p>
+        </blockquote>
+        <p><font color="#00FF00"><code>}</code></font></p>
+        <p><font color="#00FF00"><code>else<br>
+          {</code></font></p>
+        <blockquote> 
+          <p><font color="#00FF00"><code><font color="#0080FF">//stop all the 
+            active timers</font><br>
+            zincBot<font color="#FF0080">.stopAllTimers();</font></code></font></p>
+        </blockquote>
+        <p><font color="#00FF00"><code>}</code></font></p>
+      </blockquote>
+      <p><font color="#00FF00"><code>}</code></font></p>
+    </blockquote>
+  </blockquote>
+  <p><code><font color="#FF0000">}</font></code><br>
+  </p>
+  </blockquote>
+</body>
+</html>

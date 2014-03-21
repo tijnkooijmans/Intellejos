@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#333333" text="#FFFFFF" link="#FFCC00" vlink="#999966" alink="#FFFF00">
+<blockquote> 
+  <h1><font color="#FFFF00" size="7" face="Verdana, Arial, Helvetica, sans-serif">The 
+    Controller Interface</font></h1>
+  <hr>
+  <p><font color="#FFFF00" size="+2" face="Verdana, Arial, Helvetica, sans-serif">Introduction:</font></p>
+  <blockquote> 
+    <p><font face="Verdana, Arial, Helvetica, sans-serif">Every Controller File 
+      must extend this interface. <font color="#FFFF00">(click: <font color="#00FF00"><a href="zincRocker.htm">to 
+      see sample Controller File use the Controller Interface</a></font>)</font><font face="Verdana, Arial, Helvetica, sans-serif">. 
+      This means, every Controller File must implement <font color="#FFFF00">ALL</font> 
+      of the below <font color="#00FF00">methods</font>.</font></font></p>
+    <p><font face="Verdana, Arial, Helvetica, sans-serif">Below is the java code 
+      for the Controller Interface which offers <font color="#0080FF">comments</font> 
+      and <font color="#00FF00">methods </font>that detail the skeleton of the 
+      Controller File.</font></p>
+  </blockquote>
+  <p><font color="#FFFF00" size="+2" face="Verdana, Arial, Helvetica, sans-serif">The 
+    Java Code:</font></p>
+  <blockquote> 
+    <p><font face="Verdana, Arial, Helvetica, sans-serif"><code><font color="#FF0000">package 
+      interfaces;</font></code></font></p>
+    <p><code><font color="#0080FF">/**<br>
+      * Interface class for all controllers.<br>
+      *<br>
+      * All Controllers must extend this abstract class, and should obey the commands<br>
+      * specified or system behaviour is undefined. e.g. a call to halt() *must* 
+      stop <br>
+      * this controller's thread as quickly as possible and allow run() to return.<br>
+      *<br>
+      * @author Graham Ritchie, modified by: Simon Zienkiewicz<br>
+      */</font><br>
+      <font color="#FF0000">public abstract class Controller extends Thread<br>
+      {</font></code></p>
+    <blockquote> 
+      <p><code> <font color="#0080FF">/**<br>
+        * Sensor type constants (see getSensors() for explanation)<br>
+        */</font><br>
+        <font color="#00FF00">public static int SENSOR_TYPE_LIGHT=1;<br>
+        public static int SENSOR_TYPE_TOUCH=2;</font></code></p>
+      <p><code> <font color="#0080FF">/**<br>
+        * Initialises controller. It should be noted that this method will only<br>
+        * ever be called once, whereas run() can be called many times, so any<br>
+        * variables or data structures etc. that are meant to persist in between<br>
+        * stops and starts of the controller's thread, or that should only be 
+        <br>
+        * initialised once should be set up from within this method, not in run().<br>
+        *<br>
+        * @param r the AbstractRobot associated with this controller<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void initController(AbstractRobot 
+        r);<br>
+        </font><br>
+        <font color="#0080FF">/**<br>
+        * Returns the AbstractRobot associated with this controller<br>
+        *<br>
+        * @return the AbstractRobot<br>
+        */</font><br>
+        <font color="#00FF00">public abstract AbstractRobot getRobot();</font></code></p>
+      <p><code> <font color="#0080FF">/**<br>
+        * Returns an array of the sensors used by this controller, and the type<br>
+        * of sensor required. This type must be one of the sensor type constants<br>
+        * declared above. The index of the array is used to establish which sensor<br>
+        * is being defined. e.g. if array[0] is SENSOR_TYPE_TOUCH then sensor 
+        1 <br>
+        * will be set to a touch sensor. The sensors array *must* be initialised<br>
+        * with the correct values from the outset, and must not be set in <br>
+        * initController(), or any other method. (see example Controllers for 
+        <br>
+        * working examples)<br>
+        *<br>
+        * @return the sensor array<br>
+        */</font><br>
+        <font color="#00FF00">public abstract int[] getSensors();</font><br>
+        <br>
+        <font color="#0080FF">/**<br>
+        * Stops this controller's thread running, i.e. must allow run() to return<br>
+        * as quickly as possible. However it is acceptable for this method to 
+        do <br>
+        * some housekeeping before stopping the controller, e.g. save some internal<br>
+        * data strcuture to a file.<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void halt();</font></code></p>
+      <p><code> <font color="#0080FF">/** This method is called whenever a LIGHT 
+        SENSOR detects change from its previous<br>
+        * value.<br>
+        *<br>
+        * @param sensorNumber, this is the LIGHT SENSOR number that called this 
+        method<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void lightSensorListener(int sensorNumber);</font></code></p>
+      <p><code> <font color="#0080FF">/** This method is called whenever a TOUCH 
+        SENSOR detects change from its previous<br>
+        * value.<br>
+        *<br>
+        * @param sensorNumber, this is the TOUCH SENSOR number that called this 
+        method<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void touchSensorListener(int sensorNumber);</font><br>
+        <br>
+        <font color="#0080FF">/**<br>
+        * Starts this controller's thread running. The 'real' controller <br>
+        * functionality should be started from here.<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void run();</font><br>
+        <br>
+        <font color="#0080FF">/** Whenever a timer elapses this method is called 
+        and the timer which <br>
+        * elapsed is passed as a parameter<br>
+        *<br>
+        * @param elapsedTimer, the timer which elapsed<br>
+        */</font><br>
+        <font color="#00FF00">public abstract void setTimerExecution(int elapsedTimer);<br>
+        </font> </code></p>
+    </blockquote>
+    <p><code> <font color="#FF0000">}</font></code><br>
+      <font size="+1"> </font> </p>
+  </blockquote>
+</blockquote>
+</body>
+</html>

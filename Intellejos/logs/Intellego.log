@@ -1,0 +1,15 @@
+========================
+  Intellego Log File
+========================
+
+System started on: Mon Apr 04 12:01:29
+
+Messages:
+
+Intellejos.main(): GUI set up successfully
+SimUI.getClassName(): opening file: Grid.class
+SimUI.getClassName(): attempting to open class: Grid
+SimUI.getClassName(): opening file: SensorTest.class
+SimUI.getClassName(): attempting to open class: SensorTest
+SimUI.run(): Started controller
+MainInterface.init(): System quitting

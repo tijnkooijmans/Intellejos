@@ -1,0 +1,26 @@
+/*
+ * ClassPool.java
+ *
+ * Created on July 29, 2003, 8:09 PM
+ */
+
+package main;
+
+import java.util.*;
+
+/**
+ *
+ * @author  szienkiewicz
+ */
+public class ClassPool {
+   private static HashMap pool = new HashMap();
+
+   public static Class forName(String className) throws ClassNotFoundException {
+       Object x = pool.get(className);
+       if (x == null) {
+           x = pool.put(className, Class.forName(className));
+       }
+       return (Class)x;
+   }
+}
+

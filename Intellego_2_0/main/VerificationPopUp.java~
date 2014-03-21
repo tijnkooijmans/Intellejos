@@ -1,0 +1,133 @@
+package main;
+
+import intellego.Intellego;
+import util.*;
+import interfaces.*;
+import real.*;
+import simworldobjects.*;
+import main.*;
+
+import java.awt.*;
+import java.lang.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.io.*;
+
+/**
+* Provides a dialog box to ask the user whether or not they want to download the lejos firmware
+*
+* @author Simon Zienkiewicz
+* 
+*/ 
+public class VerificationPopUp extends JDialog implements ActionListener
+{
+	
+    private JLabel xLabel;
+    private JButton OK, cancel;
+
+    /**
+    * Displays a dialog box to get initial confirmation of firmware download
+    *
+    */
+
+    public void createPopUpWindow()
+    {
+        setTitle("LEJOS Firmware Check:");
+        setSize(370,90);
+        setLocation(400,400);
+        setVisible(true);
+
+        Container Panel1=new Container();
+        Panel1.setLayout(new FlowLayout());     
+
+        Container Panel2=new Container();
+        Panel2.setLayout(new FlowLayout());  
+
+        xLabel=new JLabel("Are you sure that you want to download the LEJOS firmware?");
+
+
+        (OK=new JButton("OK")).addActionListener(this);
+        (cancel=new JButton("Cancel")).addActionListener(this);
+
+        //Panel5.add("North",xLabel);
+        Panel2.add("South",OK);
+        Panel2.add("South",cancel);
+
+        Panel1.add("North",xLabel);
+        Panel1.add("South",Panel2);
+
+        this.getContentPane().add(Panel1);
+        this.show();
+
+    }
+
+    /**
+    *  Action event handler - downloads the lejos firmware to the robot
+    *
+    *  @param e the action event
+    */
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource()==OK)
+        {
+            externalCommand("lejosfirmdl");
+            dispose();
+        }      
+        else
+        {
+            dispose();
+        }
+    }
+            
+    /**
+    * Processes all external calls, i.e calls to lejos & lejosc
+    */    
+    private void externalCommand(String cmd)
+    {
+        int len;
+        byte buffer[] = new byte[1000];
+        		
+	Intellego.addToLog("CodeEditor.externalCommand(): Processing External Command: "+cmd);
+	
+	try
+	{
+            Process external=Runtime.getRuntime().exec(cmd);
+            InputStream ees = external.getErrorStream();
+           
+            try 
+            {
+                ExternalMessager output=MainInterface.createExternalMessagerFrame();
+                while ((len = ees.read(buffer)) != -1)
+		{
+                    String eo = new String (buffer, 0, len);
+                    output.append(eo);            
+                }
+                external.waitFor();
+                firmwareDownloaded("SUCCESSFUL");
+                
+                output.dispose();
+             }
+             catch (Exception e) 
+             {
+             	Intellego.addToLog("CodeEditor.externalCommand(): error: "+e.getMessage());
+                firmwareDownloaded("FAILED");
+                
+             }
+	}
+	catch (Exception e) 
+	{
+            Intellego.addToLog("CodeEditor.externalCommand(): error: "+e.getMessage());
+            firmwareDownloaded("FAILED");
+        }
+        
+    }
+    
+    /**
+    * Reports to the user the status of the compilation of their code
+    * Appended by: Simon Zienkiewicz
+    */
+    
+    private void firmwareDownloaded(String status){
+        MainInterface.displayMessage("Event: LEJOS FIRMWARE DOWNLOAD | Status: "+status);
+    }
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.0.9">
+<TITLE>NetBeansResources.AbsoluteConstraints (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">AbsoluteConstraints</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1   </FONT><A NAME="1"></A><FONT ID="MultiLineComment">/*
+<FONT ID="LN">2   </FONT><A NAME="2"></A> *                 Sun Public License Notice
+<FONT ID="LN">3   </FONT><A NAME="3"></A> * 
+<FONT ID="LN">4   </FONT><A NAME="4"></A> * The contents of this file are subject to the Sun Public License
+<FONT ID="LN">5   </FONT><A NAME="5"></A> * Version 1.0 (the "License"). You may not use this file except in
+<FONT ID="LN">6   </FONT><A NAME="6"></A> * compliance with the License. A copy of the License is available at
+<FONT ID="LN">7   </FONT><A NAME="7"></A> * http://www.sun.com/
+<FONT ID="LN">8   </FONT><A NAME="8"></A> * 
+<FONT ID="LN">9   </FONT><A NAME="9"></A> * The Original Code is NetBeans. The Initial Developer of the Original
+<FONT ID="LN">10  </FONT><A NAME="10"></A> * Code is Sun Microsystems, Inc. Portions Copyright 1997-2000 Sun
+<FONT ID="LN">11  </FONT><A NAME="11"></A> * Microsystems, Inc. All Rights Reserved.
+<FONT ID="LN">12  </FONT><A NAME="12"></A> */</FONT>
+<FONT ID="LN">13  </FONT><A NAME="13"></A>
+<FONT ID="LN">14  </FONT><A NAME="14"></A><FONT ID="Package">package</FONT> <A HREF="../NetBeansResources.index.html" target="packageFrame">NetBeansResources</A>;
+<FONT ID="LN">15  </FONT><A NAME="15"></A>
+<FONT ID="LN">16  </FONT><A NAME="16"></A><FONT ID="Import">import</FONT> java.awt.Dimension;
+<FONT ID="LN">17  </FONT><A NAME="17"></A><FONT ID="Import">import</FONT> java.awt.Point;
+<FONT ID="LN">18  </FONT><A NAME="18"></A>
+<FONT ID="LN">19  </FONT><A NAME="19"></A><FONT ID="FormalComment">/** An object that encapsulates position and (optionally) size for
+<FONT ID="LN">20  </FONT><A NAME="20"></A>* Absolute positioning of components.
+<FONT ID="LN">21  </FONT><A NAME="21"></A>*
+<FONT ID="LN">22  </FONT><A NAME="22"></A>* @see AbsoluteLayout
+<FONT ID="LN">23  </FONT><A NAME="23"></A>* @version 1.01, Aug 19, 1998
+<FONT ID="LN">24  </FONT><A NAME="24"></A>*/</FONT>
+<FONT ID="LN">25  </FONT><A NAME="25"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> AbsoluteConstraints <FONT ID="Implements">implements</FONT> java.io.Serializable {
+<FONT ID="LN">26  </FONT><A NAME="26"></A>    <FONT ID="FormalComment">/** generated Serialized Version UID */</FONT>
+<FONT ID="LN">27  </FONT><A NAME="27"></A>    <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> <FONT ID="Long">long</FONT> serialVersionUID = <FONT ID="IntegerLiteral">5261460716622152494L</FONT>;
+<FONT ID="LN">28  </FONT><A NAME="28"></A>
+<FONT ID="LN">29  </FONT><A NAME="29"></A>    <FONT ID="FormalComment">/** The X position of the component */</FONT>
+<FONT ID="LN">30  </FONT><A NAME="30"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> x;
+<FONT ID="LN">31  </FONT><A NAME="31"></A>    <FONT ID="FormalComment">/** The Y position of the component */</FONT>
+<FONT ID="LN">32  </FONT><A NAME="32"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> y;
+<FONT ID="LN">33  </FONT><A NAME="33"></A>    <FONT ID="FormalComment">/** The width of the component or -1 if the component's preferred width should be used */</FONT>
+<FONT ID="LN">34  </FONT><A NAME="34"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> width = -<FONT ID="IntegerLiteral">1</FONT>;
+<FONT ID="LN">35  </FONT><A NAME="35"></A>    <FONT ID="FormalComment">/** The height of the component or -1 if the component's preferred height should be used */</FONT>
+<FONT ID="LN">36  </FONT><A NAME="36"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> height = -<FONT ID="IntegerLiteral">1</FONT>;
+<FONT ID="LN">37  </FONT><A NAME="37"></A>
+<FONT ID="LN">38  </FONT><A NAME="38"></A>    <FONT ID="FormalComment">/** Creates a new AbsoluteConstraints for specified position.
+<FONT ID="LN">39  </FONT><A NAME="39"></A>    * @param pos The position to be represented by this AbsoluteConstraints
+<FONT ID="LN">40  </FONT><A NAME="40"></A>    */</FONT>
+<FONT ID="LN">41  </FONT><A NAME="41"></A>    <FONT ID="Public">public</FONT> AbsoluteConstraints(Point pos) {
+<FONT ID="LN">42  </FONT><A NAME="42"></A>        <FONT ID="This">this</FONT> (pos.x, pos.y);
+<FONT ID="LN">43  </FONT><A NAME="43"></A>    }
+<FONT ID="LN">44  </FONT><A NAME="44"></A>
+<FONT ID="LN">45  </FONT><A NAME="45"></A>    <FONT ID="FormalComment">/** Creates a new AbsoluteConstraints for specified position.
+<FONT ID="LN">46  </FONT><A NAME="46"></A>    * @param x The X position to be represented by this AbsoluteConstraints
+<FONT ID="LN">47  </FONT><A NAME="47"></A>    * @param y The Y position to be represented by this AbsoluteConstraints
+<FONT ID="LN">48  </FONT><A NAME="48"></A>    */</FONT>
+<FONT ID="LN">49  </FONT><A NAME="49"></A>    <FONT ID="Public">public</FONT> AbsoluteConstraints(<FONT ID="Int">int</FONT> x, <FONT ID="Int">int</FONT> y) {
+<FONT ID="LN">50  </FONT><A NAME="50"></A>        <FONT ID="This">this</FONT>.x = x;
+<FONT ID="LN">51  </FONT><A NAME="51"></A>        <FONT ID="This">this</FONT>.y = y;
+<FONT ID="LN">52  </FONT><A NAME="52"></A>    }
+<FONT ID="LN">53  </FONT><A NAME="53"></A>
+<FONT ID="LN">54  </FONT><A NAME="54"></A>    <FONT ID="FormalComment">/** Creates a new AbsoluteConstraints for specified position and size.
+<FONT ID="LN">55  </FONT><A NAME="55"></A>    * @param pos  The position to be represented by this AbsoluteConstraints
+<FONT ID="LN">56  </FONT><A NAME="56"></A>    * @param size The size to be represented by this AbsoluteConstraints or null
+<FONT ID="LN">57  </FONT><A NAME="57"></A>    *             if the component's preferred size should be used
+<FONT ID="LN">58  </FONT><A NAME="58"></A>    */</FONT>
+<FONT ID="LN">59  </FONT><A NAME="59"></A>    <FONT ID="Public">public</FONT> AbsoluteConstraints(Point pos, Dimension size) {
+<FONT ID="LN">60  </FONT><A NAME="60"></A>        <FONT ID="This">this</FONT>.x = pos.x;
+<FONT ID="LN">61  </FONT><A NAME="61"></A>        <FONT ID="This">this</FONT>.y = pos.y;
+<FONT ID="LN">62  </FONT><A NAME="62"></A>        <FONT ID="If">if</FONT> (size != <FONT ID="Null">null</FONT>) {
+<FONT ID="LN">63  </FONT><A NAME="63"></A>            <FONT ID="This">this</FONT>.width = size.width;
+<FONT ID="LN">64  </FONT><A NAME="64"></A>            <FONT ID="This">this</FONT>.height = size.height;
+<FONT ID="LN">65  </FONT><A NAME="65"></A>        }
+<FONT ID="LN">66  </FONT><A NAME="66"></A>    }
+<FONT ID="LN">67  </FONT><A NAME="67"></A>
+<FONT ID="LN">68  </FONT><A NAME="68"></A>    <FONT ID="FormalComment">/** Creates a new AbsoluteConstraints for specified position and size.
+<FONT ID="LN">69  </FONT><A NAME="69"></A>    * @param x      The X position to be represented by this AbsoluteConstraints
+<FONT ID="LN">70  </FONT><A NAME="70"></A>    * @param y      The Y position to be represented by this AbsoluteConstraints
+<FONT ID="LN">71  </FONT><A NAME="71"></A>    * @param width  The width to be represented by this AbsoluteConstraints or -1 if the 
+<FONT ID="LN">72  </FONT><A NAME="72"></A>    *               component's preferred width should be used  
+<FONT ID="LN">73  </FONT><A NAME="73"></A>    * @param height The height to be represented by this AbsoluteConstraints or -1 if the
+<FONT ID="LN">74  </FONT><A NAME="74"></A>    *               component's preferred height should be used  
+<FONT ID="LN">75  </FONT><A NAME="75"></A>    */</FONT>
+<FONT ID="LN">76  </FONT><A NAME="76"></A>    <FONT ID="Public">public</FONT> AbsoluteConstraints(<FONT ID="Int">int</FONT> x, <FONT ID="Int">int</FONT> y, <FONT ID="Int">int</FONT> width, <FONT ID="Int">int</FONT> height) {
+<FONT ID="LN">77  </FONT><A NAME="77"></A>        <FONT ID="This">this</FONT>.x = x;
+<FONT ID="LN">78  </FONT><A NAME="78"></A>        <FONT ID="This">this</FONT>.y = y;
+<FONT ID="LN">79  </FONT><A NAME="79"></A>        <FONT ID="This">this</FONT>.width = width;
+<FONT ID="LN">80  </FONT><A NAME="80"></A>        <FONT ID="This">this</FONT>.height = height;
+<FONT ID="LN">81  </FONT><A NAME="81"></A>    }
+<FONT ID="LN">82  </FONT><A NAME="82"></A>
+<FONT ID="LN">83  </FONT><A NAME="83"></A>    <FONT ID="FormalComment">/** @return The X position represented by this AbsoluteConstraints */</FONT>
+<FONT ID="LN">84  </FONT><A NAME="84"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> getX () {
+<FONT ID="LN">85  </FONT><A NAME="85"></A>        <FONT ID="Return">return</FONT> x;
+<FONT ID="LN">86  </FONT><A NAME="86"></A>    }
+<FONT ID="LN">87  </FONT><A NAME="87"></A>
+<FONT ID="LN">88  </FONT><A NAME="88"></A>    <FONT ID="FormalComment">/** @return The Y position represented by this AbsoluteConstraints */</FONT>
+<FONT ID="LN">89  </FONT><A NAME="89"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> getY () {
+<FONT ID="LN">90  </FONT><A NAME="90"></A>        <FONT ID="Return">return</FONT> y;
+<FONT ID="LN">91  </FONT><A NAME="91"></A>    }
+<FONT ID="LN">92  </FONT><A NAME="92"></A>
+<FONT ID="LN">93  </FONT><A NAME="93"></A>    <FONT ID="FormalComment">/** @return The width represented by this AbsoluteConstraints or -1 if the
+<FONT ID="LN">94  </FONT><A NAME="94"></A>    * component's preferred width should be used 
+<FONT ID="LN">95  </FONT><A NAME="95"></A>    */</FONT>
+<FONT ID="LN">96  </FONT><A NAME="96"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> getWidth () {
+<FONT ID="LN">97  </FONT><A NAME="97"></A>        <FONT ID="Return">return</FONT> width;
+<FONT ID="LN">98  </FONT><A NAME="98"></A>    }
+<FONT ID="LN">99  </FONT><A NAME="99"></A>
+<FONT ID="LN">100 </FONT><A NAME="100"></A>    <FONT ID="FormalComment">/** @return The height represented by this AbsoluteConstraints or -1 if the
+<FONT ID="LN">101 </FONT><A NAME="101"></A>    * component's preferred height should be used 
+<FONT ID="LN">102 </FONT><A NAME="102"></A>    */</FONT>
+<FONT ID="LN">103 </FONT><A NAME="103"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> getHeight () {
+<FONT ID="LN">104 </FONT><A NAME="104"></A>        <FONT ID="Return">return</FONT> height;
+<FONT ID="LN">105 </FONT><A NAME="105"></A>    }
+<FONT ID="LN">106 </FONT><A NAME="106"></A>
+<FONT ID="LN">107 </FONT><A NAME="107"></A>    <FONT ID="Public">public</FONT> String toString () {
+<FONT ID="LN">108 </FONT><A NAME="108"></A>        <FONT ID="Return">return</FONT> <FONT ID="Super">super</FONT>.toString () +<FONT ID="StringLiteral">" [x="</FONT>+x+<FONT ID="StringLiteral">", y="</FONT>+y+<FONT ID="StringLiteral">", width="</FONT>+width+<FONT ID="StringLiteral">", height="</FONT>+height+<FONT ID="StringLiteral">"]"</FONT>;
+<FONT ID="LN">109 </FONT><A NAME="109"></A>    }
+<FONT ID="LN">110 </FONT><A NAME="110"></A>
+<FONT ID="LN">111 </FONT><A NAME="111"></A>}
+<FONT ID="LN">112 </FONT><A NAME="112"></A>
+<FONT ID="LN">113 </FONT><A NAME="113"></A></pre><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">AbsoluteConstraints</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+
+</BODY>
+</HTML>

@@ -1,0 +1,15 @@
+========================
+  Intellego Log File
+========================
+
+System started on: Mon Apr 04 13:00:53
+
+Messages:
+
+Intellejos.main(): GUI set up successfully
+SimUI.getClassName(): opening file: GridCompetition.class
+SimUI.getClassName(): attempting to open class: GridCompetition
+SimUI.getClassName(): opening file: Jojo.class
+SimUI.getClassName(): attempting to open class: Jojo
+SimUI.run(): Started controller
+MainInterface.init(): System quitting

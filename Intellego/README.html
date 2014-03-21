@@ -1,0 +1,44 @@
+<html>
+<title>Intellego</title>
+<body>
+<center><h1>Intellego</h1></center>
+<center><h3>Graham Ritchie, University of St Andrews</h3></center>
+<br>
+<p>This folder contains all of the submission for the project:</p>
+
+<P> Windows
+<ul>
+<li><a href="javadocs\index.html">Javadoc generated documentation</a></li>
+<li><a href="HTMLcode\index.html">Java2HTML generated code</a></li>
+</ul>
+<p>To use the software in Windows you must first have java and lejos installed (see below for download sites), go to the <code>setup.bat</code> file in the <a href="util">util</a> directory and set the JAVA_HOME, LEJOS_HOME and INTELLEGO_HOME variables to the correct paths to java, lejos and intellego respectively</P>
+<p>To compile the software, from this directory run <code>clean.bat</code>, to delete all previous class files, and then run <code>build.bat</code> to compile.
+<p>To run the system, run <code>Intellego.bat</code></p>
+<p>To generate the javadoc run <code>makeJavadoc.bat</code>
+<p>To generate the html of the code run <code>makeHTMLcode.bat</code>
+<P><BR><P>
+<P> Linux
+<ul>
+<li><a href="javadocs/index.html">Javadoc generated documentation</a></li>
+<li><a href="HTMLcode/index.html">Java2HTML generated code</a></li>
+</ul>
+<p>To use the software in linux, make sure you have java installed correctly, then edit ./Intellego.sh and 
+util/setup.sh to contain the correct paths and classpaths to the Intellego software and to lejos.
+<P>You may also wish to add the intellego home directory to your ~/.bashrc or similar PATH variable.
+<P>Then type <code>Intellego.sh</code> to run the software, <code><b>make</b></code> to compile the software, 
+<code><b>make javadoc</b></code> to compile the javadoc, or <code><b>make html</b></code> to build the HTML. 
+<P>
+<code><b>make zip</b></code> will build a zip file if you have the Infozip "zip" program installed, and <code><b>make 
+tar</b></code> will build a tar.gz file for distribution. 
+<p><br><p>
+Note that jdk1.3 has problems in it's implementation of Swing, and you should use jdk1.4 under linux for best performance and looks.
+<p>
+<br>
+<p>Download jdk and lejos:</p>
+<ul>
+<li><a href="http://java.sun.com">Java home page</a>
+<li><a href="http://lejos.sourceforge.net">leJOS homepage</a>
+</ul>
+</body>
+</html>
+

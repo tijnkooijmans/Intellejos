@@ -1,0 +1,22 @@
+========================
+  Intellego Log File
+========================
+
+System started on: Thu Feb 03 15:18:29
+
+Messages:
+
+Intellego.main(): GUI set up successfully
+SimUI.getClassName(): opening file: MazeWorld.class
+SimUI.getClassName(): attempting to open class: MazeWorld
+SimUI.getClassName(): opening file: GBN2b.class
+SimUI.getClassName(): attempting to open class: GBN2b
+SimUI.run(): Started controller
+SimUI.getClassName(): opening file: LightWorld.class
+SimUI.getClassName(): attempting to open class: LightWorld
+SimUI.getClassName(): opening file: HandCodedLightSeeker.class
+SimUI.getClassName(): attempting to open class: HandCodedLightSeeker
+SimUI.run(): Started controller
+SimUI.run(): Started controller
+SimUI.init(): simulator quitting
+MainInterface.init(): System quitting

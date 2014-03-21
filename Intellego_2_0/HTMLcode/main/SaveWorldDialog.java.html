@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.0.9">
+<TITLE>main.SaveWorldDialog (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SaveWorldDialog</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1   </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> <A HREF="../main.index.html" target="packageFrame">main</A>;
+<FONT ID="LN">2   </FONT><A NAME="2"></A>
+<FONT ID="LN">3   </FONT><A NAME="3"></A><FONT ID="Import">import</FONT> <A HREF="../intellego/Intellego.java.html">intellego.Intellego</A>;
+<FONT ID="LN">4   </FONT><A NAME="4"></A><FONT ID="Import">import</FONT> <A HREF="../util.index.html" target="packageFrame">util.*</A>;
+<FONT ID="LN">5   </FONT><A NAME="5"></A><FONT ID="Import">import</FONT> <A HREF="../interfaces.index.html" target="packageFrame">interfaces.*</A>;
+<FONT ID="LN">6   </FONT><A NAME="6"></A><FONT ID="Import">import</FONT> <A HREF="../real.index.html" target="packageFrame">real.*</A>;
+<FONT ID="LN">7   </FONT><A NAME="7"></A><FONT ID="Import">import</FONT> <A HREF="../simworldobjects.index.html" target="packageFrame">simworldobjects.*</A>;
+<FONT ID="LN">8   </FONT><A NAME="8"></A><FONT ID="Import">import</FONT> <A HREF="../main.index.html" target="packageFrame">main.*</A>;
+<FONT ID="LN">9   </FONT><A NAME="9"></A><FONT ID="Import">import</FONT> <A HREF="../NetBeansResources.index.html" target="packageFrame">NetBeansResources.*</A>;
+<FONT ID="LN">10  </FONT><A NAME="10"></A>
+<FONT ID="LN">11  </FONT><A NAME="11"></A><FONT ID="Import">import</FONT> java.awt.*;
+<FONT ID="LN">12  </FONT><A NAME="12"></A><FONT ID="Import">import</FONT> java.lang.*;
+<FONT ID="LN">13  </FONT><A NAME="13"></A><FONT ID="Import">import</FONT> java.awt.event.*;
+<FONT ID="LN">14  </FONT><A NAME="14"></A><FONT ID="Import">import</FONT> javax.swing.*;
+<FONT ID="LN">15  </FONT><A NAME="15"></A><FONT ID="Import">import</FONT> java.io.*;
+<FONT ID="LN">16  </FONT><A NAME="16"></A><FONT ID="Import">import</FONT> java.util.*;
+<FONT ID="LN">17  </FONT><A NAME="17"></A>
+<FONT ID="LN">18  </FONT><A NAME="18"></A>
+<FONT ID="LN">19  </FONT><A NAME="19"></A><FONT ID="FormalComment">/** Provides a dialog box for the user to save their simulation world.
+<FONT ID="LN">20  </FONT><A NAME="20"></A> * @author Simon Zienkiewicz
+<FONT ID="LN">21  </FONT><A NAME="21"></A> */</FONT> 
+<FONT ID="LN">22  </FONT><A NAME="22"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> SaveWorldDialog <FONT ID="Extends">extends</FONT> JDialog <FONT ID="Implements">implements</FONT> ActionListener
+<FONT ID="LN">23  </FONT><A NAME="23"></A>{
+<FONT ID="LN">24  </FONT><A NAME="24"></A>    <FONT ID="Private">private</FONT> JLabel fileL, folderL, typeL;
+<FONT ID="LN">25  </FONT><A NAME="25"></A>    <FONT ID="Private">private</FONT> JButton OK, cancel;
+<FONT ID="LN">26  </FONT><A NAME="26"></A>    <FONT ID="Private">private</FONT> JTextField fileT, folderT;
+<FONT ID="LN">27  </FONT><A NAME="27"></A>   
+<FONT ID="LN">28  </FONT><A NAME="28"></A>    <FONT ID="Private">private</FONT> <A HREF="../simworldobjects/SimGround.java.html">SimGround</A> simg;
+<FONT ID="LN">29  </FONT><A NAME="29"></A>    <FONT ID="Private">private</FONT> <A HREF="../main/GridDisplay.java.html">GridDisplay</A> grid;
+<FONT ID="LN">30  </FONT><A NAME="30"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> gridSize;
+<FONT ID="LN">31  </FONT><A NAME="31"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> pixelSize=<FONT ID="IntegerLiteral">4</FONT>;
+<FONT ID="LN">32  </FONT><A NAME="32"></A>    <FONT ID="Private">private</FONT> <FONT ID="Boolean">boolean</FONT> noGrid=<FONT ID="True">true</FONT>;
+<FONT ID="LN">33  </FONT><A NAME="33"></A>    
+<FONT ID="LN">34  </FONT><A NAME="34"></A>    <FONT ID="Private">private</FONT> <A HREF="../simworldobjects/BasicSimWorld.java.html">BasicSimWorld</A>  world;
+<FONT ID="LN">35  </FONT><A NAME="35"></A>    <FONT ID="Private">private</FONT> String path;
+<FONT ID="LN">36  </FONT><A NAME="36"></A>    <FONT ID="Private">private</FONT> String currentWorldFile;
+<FONT ID="LN">37  </FONT><A NAME="37"></A>    <FONT ID="Private">private</FONT> String fileName = <FONT ID="StringLiteral">""</FONT>; 
+<FONT ID="LN">38  </FONT><A NAME="38"></A>    <FONT ID="Private">private</FONT> JFileChooser chooser;
+<FONT ID="LN">39  </FONT><A NAME="39"></A>    
+<FONT ID="LN">40  </FONT><A NAME="40"></A>    
+<FONT ID="LN">41  </FONT><A NAME="41"></A>    <FONT ID="FormalComment">/** Creates a dialog box for the user to save their simulation world.
+<FONT ID="LN">42  </FONT><A NAME="42"></A>     * @param path the path of the file
+<FONT ID="LN">43  </FONT><A NAME="43"></A>     * @param world the SimWorld object itself
+<FONT ID="LN">44  </FONT><A NAME="44"></A>     * @param currentWorldFile the name of the current world
+<FONT ID="LN">45  </FONT><A NAME="45"></A>     */</FONT>
+<FONT ID="LN">46  </FONT><A NAME="46"></A>
+<FONT ID="LN">47  </FONT><A NAME="47"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> createSaveWorldPopUp(String path, <A HREF="../interfaces/SimWorld.java.html">SimWorld</A> world, String currentWorldFile)
+<FONT ID="LN">48  </FONT><A NAME="48"></A>    {
+<FONT ID="LN">49  </FONT><A NAME="49"></A>        <FONT ID="SingleLineComment">//setup variables
+<FONT ID="LN">50  </FONT><A NAME="50"></A></FONT>        <FONT ID="This">this</FONT>.path = path;
+<FONT ID="LN">51  </FONT><A NAME="51"></A>        <FONT ID="This">this</FONT>.world = (<A HREF="../simworldobjects/BasicSimWorld.java.html">BasicSimWorld</A>)world;
+<FONT ID="LN">52  </FONT><A NAME="52"></A>        <FONT ID="This">this</FONT>.currentWorldFile=currentWorldFile.substring(<FONT ID="IntegerLiteral">0</FONT>,currentWorldFile.length()-<FONT ID="IntegerLiteral">6</FONT>);
+<FONT ID="LN">53  </FONT><A NAME="53"></A>
+<FONT ID="LN">54  </FONT><A NAME="54"></A>        <FONT ID="SingleLineComment">//sets the properties of the popup window
+<FONT ID="LN">55  </FONT><A NAME="55"></A></FONT>        setTitle(<FONT ID="StringLiteral">"Save Instance of this SimWorld:"</FONT>);
+<FONT ID="LN">56  </FONT><A NAME="56"></A>        setSize(<FONT ID="IntegerLiteral">275</FONT>,<FONT ID="IntegerLiteral">155</FONT>);
+<FONT ID="LN">57  </FONT><A NAME="57"></A>        setLocation(<FONT ID="IntegerLiteral">400</FONT>,<FONT ID="IntegerLiteral">400</FONT>);
+<FONT ID="LN">58  </FONT><A NAME="58"></A>        <FONT ID="SingleLineComment">//this.setResizable(false);
+<FONT ID="LN">59  </FONT><A NAME="59"></A></FONT>        
+<FONT ID="LN">60  </FONT><A NAME="60"></A>        <FONT ID="This">this</FONT>.setDefaultLookAndFeelDecorated(<FONT ID="False">false</FONT>);
+<FONT ID="LN">61  </FONT><A NAME="61"></A>        <FONT ID="This">this</FONT>.setUndecorated(<FONT ID="True">true</FONT>);
+<FONT ID="LN">62  </FONT><A NAME="62"></A>        <FONT ID="This">this</FONT>.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+<FONT ID="LN">63  </FONT><A NAME="63"></A>        
+<FONT ID="LN">64  </FONT><A NAME="64"></A>        setVisible(<FONT ID="True">true</FONT>);
+<FONT ID="LN">65  </FONT><A NAME="65"></A>
+<FONT ID="LN">66  </FONT><A NAME="66"></A>        Container mainPanel=getContentPane();
+<FONT ID="LN">67  </FONT><A NAME="67"></A>        mainPanel.setLayout(<FONT ID="New">new</FONT> BorderLayout(<FONT ID="IntegerLiteral">1</FONT>,<FONT ID="IntegerLiteral">1</FONT>));
+<FONT ID="LN">68  </FONT><A NAME="68"></A>
+<FONT ID="LN">69  </FONT><A NAME="69"></A>        Container Panell=<FONT ID="New">new</FONT> Container();
+<FONT ID="LN">70  </FONT><A NAME="70"></A>        Panell.setLayout(<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteLayout.java.html">AbsoluteLayout</A>());
+<FONT ID="LN">71  </FONT><A NAME="71"></A>
+<FONT ID="LN">72  </FONT><A NAME="72"></A>        Container Panel5=<FONT ID="New">new</FONT> Container();
+<FONT ID="LN">73  </FONT><A NAME="73"></A>        Panel5.setLayout(<FONT ID="New">new</FONT> FlowLayout());
+<FONT ID="LN">74  </FONT><A NAME="74"></A>
+<FONT ID="LN">75  </FONT><A NAME="75"></A>        <FONT ID="This">this</FONT>.fileL = <FONT ID="New">new</FONT> JLabel(<FONT ID="StringLiteral">"File Name: "</FONT>);
+<FONT ID="LN">76  </FONT><A NAME="76"></A>        fileL.setForeground(Color.lightGray);
+<FONT ID="LN">77  </FONT><A NAME="77"></A>        <FONT ID="This">this</FONT>.folderL = <FONT ID="New">new</FONT> JLabel(<FONT ID="StringLiteral">"Folder: "</FONT>);
+<FONT ID="LN">78  </FONT><A NAME="78"></A>        folderL.setForeground(Color.lightGray);
+<FONT ID="LN">79  </FONT><A NAME="79"></A>        <FONT ID="This">this</FONT>.typeL = <FONT ID="New">new</FONT> JLabel(<FONT ID="StringLiteral">". JAVA"</FONT>);
+<FONT ID="LN">80  </FONT><A NAME="80"></A>        typeL.setForeground(Color.lightGray);
+<FONT ID="LN">81  </FONT><A NAME="81"></A>       
+<FONT ID="LN">82  </FONT><A NAME="82"></A>        <FONT ID="This">this</FONT>.fileT = <FONT ID="New">new</FONT> JTextField(<FONT ID="IntegerLiteral">11</FONT>);
+<FONT ID="LN">83  </FONT><A NAME="83"></A>        <FONT ID="This">this</FONT>.folderT = <FONT ID="New">new</FONT> JTextField();
+<FONT ID="LN">84  </FONT><A NAME="84"></A>        <FONT ID="This">this</FONT>.folderT.setEditable(<FONT ID="False">false</FONT>);
+<FONT ID="LN">85  </FONT><A NAME="85"></A>        <FONT ID="This">this</FONT>.folderT.setText(<FONT ID="This">this</FONT>.path);
+<FONT ID="LN">86  </FONT><A NAME="86"></A>        <FONT ID="This">this</FONT>.folderT.setFocusable(<FONT ID="False">false</FONT>);
+<FONT ID="LN">87  </FONT><A NAME="87"></A>        
+<FONT ID="LN">88  </FONT><A NAME="88"></A>        <FONT ID="SingleLineComment">//set color
+<FONT ID="LN">89  </FONT><A NAME="89"></A></FONT>        fileT.setBackground(Color.yellow);
+<FONT ID="LN">90  </FONT><A NAME="90"></A>        fileT.setForeground(Color.darkGray);
+<FONT ID="LN">91  </FONT><A NAME="91"></A>        folderT.setBackground(Color.yellow);
+<FONT ID="LN">92  </FONT><A NAME="92"></A>        folderT.setForeground(Color.darkGray);
+<FONT ID="LN">93  </FONT><A NAME="93"></A>        
+<FONT ID="LN">94  </FONT><A NAME="94"></A>        (OK=<FONT ID="New">new</FONT> JButton(<FONT ID="StringLiteral">"OK"</FONT>)).addActionListener(<FONT ID="This">this</FONT>);
+<FONT ID="LN">95  </FONT><A NAME="95"></A>        (cancel=<FONT ID="New">new</FONT> JButton(<FONT ID="StringLiteral">"Cancel"</FONT>)).addActionListener(<FONT ID="This">this</FONT>);
+<FONT ID="LN">96  </FONT><A NAME="96"></A>        
+<FONT ID="LN">97  </FONT><A NAME="97"></A>        <FONT ID="SingleLineComment">//set color
+<FONT ID="LN">98  </FONT><A NAME="98"></A></FONT>        OK.setBackground(Color.lightGray);
+<FONT ID="LN">99  </FONT><A NAME="99"></A>        OK.setForeground(Color.darkGray);
+<FONT ID="LN">100 </FONT><A NAME="100"></A>        cancel.setBackground(Color.lightGray);
+<FONT ID="LN">101 </FONT><A NAME="101"></A>        cancel.setForeground(Color.darkGray);
+<FONT ID="LN">102 </FONT><A NAME="102"></A>
+<FONT ID="LN">103 </FONT><A NAME="103"></A>        Panell.add(<FONT ID="This">this</FONT>.fileL,<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteConstraints.java.html">AbsoluteConstraints</A>(<FONT ID="IntegerLiteral">10</FONT>,<FONT ID="IntegerLiteral">20</FONT>));
+<FONT ID="LN">104 </FONT><A NAME="104"></A>        Panell.add(<FONT ID="This">this</FONT>.fileT,<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteConstraints.java.html">AbsoluteConstraints</A>(<FONT ID="IntegerLiteral">80</FONT>,<FONT ID="IntegerLiteral">17</FONT>));
+<FONT ID="LN">105 </FONT><A NAME="105"></A>        Panell.add(<FONT ID="This">this</FONT>.typeL,<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteConstraints.java.html">AbsoluteConstraints</A>(<FONT ID="IntegerLiteral">210</FONT>,<FONT ID="IntegerLiteral">20</FONT>));
+<FONT ID="LN">106 </FONT><A NAME="106"></A>        Panell.add(<FONT ID="This">this</FONT>.folderL,<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteConstraints.java.html">AbsoluteConstraints</A>(<FONT ID="IntegerLiteral">30</FONT>,<FONT ID="IntegerLiteral">57</FONT>));
+<FONT ID="LN">107 </FONT><A NAME="107"></A>        Panell.add(<FONT ID="This">this</FONT>.folderT,<FONT ID="New">new</FONT> <A HREF="../NetBeansResources/AbsoluteConstraints.java.html">AbsoluteConstraints</A>(<FONT ID="IntegerLiteral">80</FONT>,<FONT ID="IntegerLiteral">54</FONT>));
+<FONT ID="LN">108 </FONT><A NAME="108"></A>
+<FONT ID="LN">109 </FONT><A NAME="109"></A>        Panel5.add(<FONT ID="StringLiteral">"South"</FONT>,OK);
+<FONT ID="LN">110 </FONT><A NAME="110"></A>        Panel5.add(<FONT ID="StringLiteral">"South"</FONT>,cancel);
+<FONT ID="LN">111 </FONT><A NAME="111"></A>
+<FONT ID="LN">112 </FONT><A NAME="112"></A>        mainPanel.setBackground(Color.darkGray);
+<FONT ID="LN">113 </FONT><A NAME="113"></A>        mainPanel.add(<FONT ID="StringLiteral">"North"</FONT>,Panell);
+<FONT ID="LN">114 </FONT><A NAME="114"></A>        mainPanel.add(<FONT ID="StringLiteral">"South"</FONT>,Panel5);
+<FONT ID="LN">115 </FONT><A NAME="115"></A>
+<FONT ID="LN">116 </FONT><A NAME="116"></A>        <FONT ID="This">this</FONT>.show();
+<FONT ID="LN">117 </FONT><A NAME="117"></A>    }
+<FONT ID="LN">118 </FONT><A NAME="118"></A>    
+<FONT ID="LN">119 </FONT><A NAME="119"></A>    <FONT ID="FormalComment">/** Creates a instance of the current world and saves the world to a file. */</FONT>    
+<FONT ID="LN">120 </FONT><A NAME="120"></A>    <FONT ID="Private">private</FONT> <FONT ID="Void">void</FONT> createInstanceWorld(){
+<FONT ID="LN">121 </FONT><A NAME="121"></A>               
+<FONT ID="LN">122 </FONT><A NAME="122"></A>        File newWorldJava = <FONT ID="New">new</FONT> File(path+fileName+<FONT ID="StringLiteral">".java"</FONT>);
+<FONT ID="LN">123 </FONT><A NAME="123"></A>        FileWriter out = <FONT ID="Null">null</FONT>;
+<FONT ID="LN">124 </FONT><A NAME="124"></A>        Calendar rightNow = Calendar.getInstance();
+<FONT ID="LN">125 </FONT><A NAME="125"></A>        
+<FONT ID="LN">126 </FONT><A NAME="126"></A>        <FONT ID="Try">try</FONT>{
+<FONT ID="LN">127 </FONT><A NAME="127"></A>            out = <FONT ID="New">new</FONT> FileWriter(newWorldJava);
+<FONT ID="LN">128 </FONT><A NAME="128"></A>            <FONT ID="Try">try</FONT>{
+<FONT ID="LN">129 </FONT><A NAME="129"></A>                <FONT ID="SingleLineComment">//start writing
+<FONT ID="LN">130 </FONT><A NAME="130"></A></FONT>                out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">131 </FONT><A NAME="131"></A>                out.write(<FONT ID="StringLiteral">"\n //Date created: "</FONT>+rightNow.getTime().toString());
+<FONT ID="LN">132 </FONT><A NAME="132"></A>                out.write(<FONT ID="StringLiteral">"// This file was generated at you request by Intelleg."</FONT>);
+<FONT ID="LN">133 </FONT><A NAME="133"></A>                out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">134 </FONT><A NAME="134"></A>                out.write(<FONT ID="StringLiteral">"\n import simworldobjects.*;"</FONT>);
+<FONT ID="LN">135 </FONT><A NAME="135"></A>                out.write(<FONT ID="StringLiteral">"\n import java.awt.*;"</FONT>);
+<FONT ID="LN">136 </FONT><A NAME="136"></A>                out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">137 </FONT><A NAME="137"></A>                out.write(<FONT ID="StringLiteral">"\n public class "</FONT>+fileName+<FONT ID="StringLiteral">" extends BasicSimWorld {"</FONT>);
+<FONT ID="LN">138 </FONT><A NAME="138"></A>                out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">139 </FONT><A NAME="139"></A>                out.write(<FONT ID="StringLiteral">"\n    /** Creates a new instance of"</FONT>+fileName+<FONT ID="StringLiteral">" */"</FONT>);
+<FONT ID="LN">140 </FONT><A NAME="140"></A>                out.write(<FONT ID="StringLiteral">"\n    public "</FONT>+fileName+<FONT ID="StringLiteral">"() {"</FONT>);
+<FONT ID="LN">141 </FONT><A NAME="141"></A>                out.write(<FONT ID="StringLiteral">"\n         super("</FONT>+world.getWorldDimensions()[<FONT ID="IntegerLiteral">0</FONT>] + <FONT ID="StringLiteral">","</FONT>+world.getWorldDimensions()[<FONT ID="IntegerLiteral">1</FONT>]+<FONT ID="StringLiteral">","</FONT>+world.getWorldDimensions()[<FONT ID="IntegerLiteral">2</FONT>]+ <FONT ID="StringLiteral">", new Color("</FONT>+world.getWorldColor().getRGB()+<FONT ID="StringLiteral">"));"</FONT>);
+<FONT ID="LN">142 </FONT><A NAME="142"></A>                out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">143 </FONT><A NAME="143"></A>                <FONT ID="SingleLineComment">//add all the walls and ground objects to the file
+<FONT ID="LN">144 </FONT><A NAME="144"></A></FONT>                LinkedList objectList = world.getObjectList();
+<FONT ID="LN">145 </FONT><A NAME="145"></A>
+<FONT ID="LN">146 </FONT><A NAME="146"></A>                <FONT ID="For">for</FONT>(<FONT ID="Int">int</FONT> a=<FONT ID="IntegerLiteral">0</FONT>;a&lt;objectList.size();a++){
+<FONT ID="LN">147 </FONT><A NAME="147"></A>
+<FONT ID="LN">148 </FONT><A NAME="148"></A>                <A HREF="../interfaces/SimObject.java.html">SimObject</A> sim = (<A HREF="../interfaces/SimObject.java.html">SimObject</A>)(objectList.get(a));
+<FONT ID="LN">149 </FONT><A NAME="149"></A>
+<FONT ID="LN">150 </FONT><A NAME="150"></A>                    <FONT ID="If">if</FONT>(sim <FONT ID="InstanceOf">instanceof</FONT> <A HREF="../simworldobjects/SimGround.java.html">SimGround</A>){
+<FONT ID="LN">151 </FONT><A NAME="151"></A>                        <A HREF="../simworldobjects/SimGround.java.html">SimGround</A> ground = (<A HREF="../simworldobjects/SimGround.java.html">SimGround</A>)sim;
+<FONT ID="LN">152 </FONT><A NAME="152"></A>                        out.write(<FONT ID="StringLiteral">"\n         SimGround "</FONT>+(ground.getType()+a)+<FONT ID="StringLiteral">"= new SimGround("</FONT>+ground.getXCoord()+<FONT ID="StringLiteral">","</FONT>+ground.getYCoord()+<FONT ID="StringLiteral">","</FONT>+ground.getZCoord()+<FONT ID="StringLiteral">","</FONT>+ground.getActualBearingXZ()+<FONT ID="StringLiteral">","</FONT>+ground.getWidth()+<FONT ID="StringLiteral">","</FONT>+ground.getLength()+<FONT ID="StringLiteral">", new Color("</FONT>+ground.getColor().getRGB()+<FONT ID="StringLiteral">"));"</FONT>);
+<FONT ID="LN">153 </FONT><A NAME="153"></A>                        out.write(<FONT ID="StringLiteral">"\n         addObject("</FONT>+(ground.getType()+a)+<FONT ID="StringLiteral">");"</FONT>);
+<FONT ID="LN">154 </FONT><A NAME="154"></A>                        out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">155 </FONT><A NAME="155"></A>                    }
+<FONT ID="LN">156 </FONT><A NAME="156"></A>                    <FONT ID="Else">else</FONT> <FONT ID="If">if</FONT>(sim <FONT ID="InstanceOf">instanceof</FONT> <A HREF="../simworldobjects/SimWall.java.html">SimWall</A>){
+<FONT ID="LN">157 </FONT><A NAME="157"></A>                        <A HREF="../simworldobjects/SimWall.java.html">SimWall</A> wall = (<A HREF="../simworldobjects/SimWall.java.html">SimWall</A>)sim;
+<FONT ID="LN">158 </FONT><A NAME="158"></A>                        out.write(<FONT ID="StringLiteral">"\n         SimWall "</FONT>+(wall.getType()+a)+<FONT ID="StringLiteral">"= new SimWall("</FONT>+wall.getXCoord()+<FONT ID="StringLiteral">","</FONT>+wall.getYCoord()+<FONT ID="StringLiteral">","</FONT>+wall.getZCoord()+<FONT ID="StringLiteral">","</FONT>+wall.getActualBearingXZ()+<FONT ID="StringLiteral">","</FONT>+wall.getWidth()+<FONT ID="StringLiteral">","</FONT>+wall.getLength()+<FONT ID="StringLiteral">");"</FONT>);
+<FONT ID="LN">159 </FONT><A NAME="159"></A>                        out.write(<FONT ID="StringLiteral">"\n         addObject("</FONT>+(wall.getType()+a)+<FONT ID="StringLiteral">");"</FONT>);
+<FONT ID="LN">160 </FONT><A NAME="160"></A>                        out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">161 </FONT><A NAME="161"></A>                        
+<FONT ID="LN">162 </FONT><A NAME="162"></A>                    }
+<FONT ID="LN">163 </FONT><A NAME="163"></A>                    <FONT ID="Else">else</FONT> <FONT ID="If">if</FONT>(sim <FONT ID="InstanceOf">instanceof</FONT> <A HREF="../simworldobjects/SimRoad.java.html">SimRoad</A>){
+<FONT ID="LN">164 </FONT><A NAME="164"></A>                        <A HREF="../simworldobjects/SimRoad.java.html">SimRoad</A> road = (<A HREF="../simworldobjects/SimRoad.java.html">SimRoad</A>)sim;
+<FONT ID="LN">165 </FONT><A NAME="165"></A>                        out.write(<FONT ID="StringLiteral">"\n         SimRoad "</FONT>+(road.getType()+a)+<FONT ID="StringLiteral">"= new SimRoad("</FONT>+road.getXCoord()+<FONT ID="StringLiteral">","</FONT>+road.getYCoord()+<FONT ID="StringLiteral">","</FONT>+road.getZCoord()+<FONT ID="StringLiteral">","</FONT>+road.getActualBearingXZ()+<FONT ID="StringLiteral">","</FONT>+road.getWidth()+<FONT ID="StringLiteral">","</FONT>+road.getLength()+<FONT ID="StringLiteral">");"</FONT>);
+<FONT ID="LN">166 </FONT><A NAME="166"></A>                        out.write(<FONT ID="StringLiteral">"\n         addObject("</FONT>+(road.getType()+a)+<FONT ID="StringLiteral">");"</FONT>);
+<FONT ID="LN">167 </FONT><A NAME="167"></A>                        out.write(<FONT ID="StringLiteral">"\n"</FONT>);
+<FONT ID="LN">168 </FONT><A NAME="168"></A>                        
+<FONT ID="LN">169 </FONT><A NAME="169"></A>                    }
+<FONT ID="LN">170 </FONT><A NAME="170"></A>                }
+<FONT ID="LN">171 </FONT><A NAME="171"></A>                out.write(<FONT ID="StringLiteral">"\n     }"</FONT>);
+<FONT ID="LN">172 </FONT><A NAME="172"></A>                out.write(<FONT ID="StringLiteral">"\n }"</FONT>);
+<FONT ID="LN">173 </FONT><A NAME="173"></A>                
+<FONT ID="LN">174 </FONT><A NAME="174"></A>                <FONT ID="SingleLineComment">//close the file
+<FONT ID="LN">175 </FONT><A NAME="175"></A></FONT>                out.close();
+<FONT ID="LN">176 </FONT><A NAME="176"></A>                
+<FONT ID="LN">177 </FONT><A NAME="177"></A>                <FONT ID="SingleLineComment">//compile the file using the java compiler
+<FONT ID="LN">178 </FONT><A NAME="178"></A></FONT>                externalCommand(<FONT ID="StringLiteral">"javac "</FONT>+newWorldJava.getPath());
+<FONT ID="LN">179 </FONT><A NAME="179"></A>            }
+<FONT ID="LN">180 </FONT><A NAME="180"></A>            <FONT ID="Catch">catch</FONT>(Exception ea){
+<FONT ID="LN">181 </FONT><A NAME="181"></A>                MainInterface.displayMessage(<FONT ID="StringLiteral">"Cannot write to the desired filename."</FONT>);
+<FONT ID="LN">182 </FONT><A NAME="182"></A>        Intellego.addToLog(<FONT ID="StringLiteral">"SaveWorldDialog.createInstanceWorld(): Writing to file failed: "</FONT>+ea);
+<FONT ID="LN">183 </FONT><A NAME="183"></A>            }
+<FONT ID="LN">184 </FONT><A NAME="184"></A>        }
+<FONT ID="LN">185 </FONT><A NAME="185"></A>        <FONT ID="Catch">catch</FONT>(Exception e){
+<FONT ID="LN">186 </FONT><A NAME="186"></A>            MainInterface.displayMessage(<FONT ID="StringLiteral">"Cannot recognize the entered file name"</FONT>);
+<FONT ID="LN">187 </FONT><A NAME="187"></A>            Intellego.addToLog(<FONT ID="StringLiteral">"SaveWorldDialog.createInstanceWorld(): Creating file failed: "</FONT>+e);
+<FONT ID="LN">188 </FONT><A NAME="188"></A>        }
+<FONT ID="LN">189 </FONT><A NAME="189"></A>    }
+<FONT ID="LN">190 </FONT><A NAME="190"></A>
+<FONT ID="LN">191 </FONT><A NAME="191"></A>     <FONT ID="FormalComment">/** Processes all external calls, specifically to compile the currently saved java file
+<FONT ID="LN">192 </FONT><A NAME="192"></A>      * in order to all immediate use
+<FONT ID="LN">193 </FONT><A NAME="193"></A>      * @param cmd the processed cmd
+<FONT ID="LN">194 </FONT><A NAME="194"></A>      */</FONT>
+<FONT ID="LN">195 </FONT><A NAME="195"></A>    <FONT ID="Private">private</FONT> <FONT ID="Void">void</FONT> externalCommand(String cmd)
+<FONT ID="LN">196 </FONT><A NAME="196"></A>    {
+<FONT ID="LN">197 </FONT><A NAME="197"></A>        <FONT ID="Int">int</FONT> len;
+<FONT ID="LN">198 </FONT><A NAME="198"></A>        <FONT ID="Byte">byte</FONT> buffer[] = <FONT ID="New">new</FONT> <FONT ID="Byte">byte</FONT>[<FONT ID="IntegerLiteral">1000</FONT>];
+<FONT ID="LN">199 </FONT><A NAME="199"></A>    Intellego.addToLog(<FONT ID="StringLiteral">"SaveWorldDialog.externalCommand(): Processing External Command: "</FONT>+cmd);
+<FONT ID="LN">200 </FONT><A NAME="200"></A>    <FONT ID="Try">try</FONT>
+<FONT ID="LN">201 </FONT><A NAME="201"></A>    {
+<FONT ID="LN">202 </FONT><A NAME="202"></A>            Process external=Runtime.getRuntime().exec(cmd);
+<FONT ID="LN">203 </FONT><A NAME="203"></A>            InputStream ees = external.getErrorStream();
+<FONT ID="LN">204 </FONT><A NAME="204"></A>            <FONT ID="Try">try</FONT> 
+<FONT ID="LN">205 </FONT><A NAME="205"></A>            {
+<FONT ID="LN">206 </FONT><A NAME="206"></A>                <A HREF="../main/ExternalMessager.java.html">ExternalMessager</A> output=MainInterface.createExternalMessagerFrame(<FONT ID="IntegerLiteral">0</FONT>);
+<FONT ID="LN">207 </FONT><A NAME="207"></A>                <FONT ID="While">while</FONT> ((len = ees.read(buffer)) != -<FONT ID="IntegerLiteral">1</FONT>)
+<FONT ID="LN">208 </FONT><A NAME="208"></A>        {
+<FONT ID="LN">209 </FONT><A NAME="209"></A>                    String eo = <FONT ID="New">new</FONT> String (buffer, <FONT ID="IntegerLiteral">0</FONT>, len);
+<FONT ID="LN">210 </FONT><A NAME="210"></A>                    output.append(eo);            
+<FONT ID="LN">211 </FONT><A NAME="211"></A>                }
+<FONT ID="LN">212 </FONT><A NAME="212"></A>                external.waitFor();
+<FONT ID="LN">213 </FONT><A NAME="213"></A>                
+<FONT ID="LN">214 </FONT><A NAME="214"></A>                <FONT ID="If">if</FONT>(output.successfullCompile()){
+<FONT ID="LN">215 </FONT><A NAME="215"></A>                
+<FONT ID="LN">216 </FONT><A NAME="216"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"</FONT>);
+<FONT ID="LN">217 </FONT><A NAME="217"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"     |  COMPILING SUCCESSFUL: NO ERRORS FOUND  |"</FONT>);
+<FONT ID="LN">218 </FONT><A NAME="218"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"</FONT>);
+<FONT ID="LN">219 </FONT><A NAME="219"></A>                }
+<FONT ID="LN">220 </FONT><A NAME="220"></A>                
+<FONT ID="LN">221 </FONT><A NAME="221"></A>                <FONT ID="Else">else</FONT>{
+<FONT ID="LN">222 </FONT><A NAME="222"></A>                    
+<FONT ID="LN">223 </FONT><A NAME="223"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"</FONT>);
+<FONT ID="LN">224 </FONT><A NAME="224"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"     |  COMPILING FAILED: ERRORS FOUND   |"</FONT>);
+<FONT ID="LN">225 </FONT><A NAME="225"></A>                    output.append(<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"\n"</FONT>+<FONT ID="StringLiteral">"   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"</FONT>);
+<FONT ID="LN">226 </FONT><A NAME="226"></A>                
+<FONT ID="LN">227 </FONT><A NAME="227"></A>                }
+<FONT ID="LN">228 </FONT><A NAME="228"></A>                
+<FONT ID="LN">229 </FONT><A NAME="229"></A>                
+<FONT ID="LN">230 </FONT><A NAME="230"></A>             }
+<FONT ID="LN">231 </FONT><A NAME="231"></A>             <FONT ID="Catch">catch</FONT> (Exception e) 
+<FONT ID="LN">232 </FONT><A NAME="232"></A>             {
+<FONT ID="LN">233 </FONT><A NAME="233"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SaveWorldDialog.externalCommand(): error: "</FONT>+e.getMessage());
+<FONT ID="LN">234 </FONT><A NAME="234"></A>             }
+<FONT ID="LN">235 </FONT><A NAME="235"></A>    }
+<FONT ID="LN">236 </FONT><A NAME="236"></A>    <FONT ID="Catch">catch</FONT> (Exception e) 
+<FONT ID="LN">237 </FONT><A NAME="237"></A>    {
+<FONT ID="LN">238 </FONT><A NAME="238"></A>            Intellego.addToLog(<FONT ID="StringLiteral">"SaveWorldDialog.externalCommand(): error: "</FONT>+e.getMessage());
+<FONT ID="LN">239 </FONT><A NAME="239"></A>        }
+<FONT ID="LN">240 </FONT><A NAME="240"></A>    }
+<FONT ID="LN">241 </FONT><A NAME="241"></A>    
+<FONT ID="LN">242 </FONT><A NAME="242"></A>    <FONT ID="FormalComment">/**  Action event handler
+<FONT ID="LN">243 </FONT><A NAME="243"></A>     * @param e the action event
+<FONT ID="LN">244 </FONT><A NAME="244"></A>     */</FONT>
+<FONT ID="LN">245 </FONT><A NAME="245"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e)
+<FONT ID="LN">246 </FONT><A NAME="246"></A>    {   <FONT ID="Boolean">boolean</FONT> flag = <FONT ID="False">false</FONT>;
+<FONT ID="LN">247 </FONT><A NAME="247"></A>        <FONT ID="If">if</FONT> (e.getSource()==OK)
+<FONT ID="LN">248 </FONT><A NAME="248"></A>        {   
+<FONT ID="LN">249 </FONT><A NAME="249"></A>            fileName = (<FONT ID="This">this</FONT>.fileT.getText()).trim();
+<FONT ID="LN">250 </FONT><A NAME="250"></A>            
+<FONT ID="LN">251 </FONT><A NAME="251"></A>            <FONT ID="SingleLineComment">//check if there are multiple spaces in the name
+<FONT ID="LN">252 </FONT><A NAME="252"></A></FONT>            <FONT ID="For">for</FONT>(<FONT ID="Int">int</FONT> a=<FONT ID="IntegerLiteral">0</FONT>;a&lt;fileName.length();a++){
+<FONT ID="LN">253 </FONT><A NAME="253"></A>                <FONT ID="Char">char</FONT> blank = <FONT ID="CharacerLiteral">' '</FONT>;
+<FONT ID="LN">254 </FONT><A NAME="254"></A>                <FONT ID="If">if</FONT>(fileName.charAt(a) == blank){
+<FONT ID="LN">255 </FONT><A NAME="255"></A>                    flag=<FONT ID="True">true</FONT>;
+<FONT ID="LN">256 </FONT><A NAME="256"></A>                    <FONT ID="Break">break</FONT>;
+<FONT ID="LN">257 </FONT><A NAME="257"></A>                }
+<FONT ID="LN">258 </FONT><A NAME="258"></A>            }
+<FONT ID="LN">259 </FONT><A NAME="259"></A>            chooser=<FONT ID="New">new</FONT> JFileChooser(<FONT ID="New">new</FONT> File(System.getProperties().getProperty(<FONT ID="StringLiteral">"user.dir"</FONT>),<FONT ID="StringLiteral">"simworlds"</FONT>));
+<FONT ID="LN">260 </FONT><A NAME="260"></A>        chooser.setVisible(<FONT ID="False">false</FONT>);            
+<FONT ID="LN">261 </FONT><A NAME="261"></A>            
+<FONT ID="LN">262 </FONT><A NAME="262"></A>            File[] arrayF = (chooser.getCurrentDirectory().listFiles());
+<FONT ID="LN">263 </FONT><A NAME="263"></A>            String lowerCaseFile = fileName.toLowerCase();          
+<FONT ID="LN">264 </FONT><A NAME="264"></A>            
+<FONT ID="LN">265 </FONT><A NAME="265"></A>            <FONT ID="For">for</FONT>(<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;arrayF.length;i++){
+<FONT ID="LN">266 </FONT><A NAME="266"></A>                <FONT ID="Try">try</FONT>{
+<FONT ID="LN">267 </FONT><A NAME="267"></A>                    String lowerCaseCurr = (arrayF[i].getName()).substring(<FONT ID="IntegerLiteral">0</FONT>,(arrayF[i].getName()).indexOf(<FONT ID="CharacerLiteral">'.'</FONT>)).toLowerCase();
+<FONT ID="LN">268 </FONT><A NAME="268"></A>                    <FONT ID="If">if</FONT>(lowerCaseFile.equals(lowerCaseCurr)){
+<FONT ID="LN">269 </FONT><A NAME="269"></A>                        flag = <FONT ID="True">true</FONT>;
+<FONT ID="LN">270 </FONT><A NAME="270"></A>                        System.out.println(<FONT ID="StringLiteral">"Flag is TRUE!!"</FONT>);
+<FONT ID="LN">271 </FONT><A NAME="271"></A>                        <FONT ID="Break">break</FONT>;
+<FONT ID="LN">272 </FONT><A NAME="272"></A>                    }
+<FONT ID="LN">273 </FONT><A NAME="273"></A>                }
+<FONT ID="LN">274 </FONT><A NAME="274"></A>                <FONT ID="Catch">catch</FONT>(Exception e2){<FONT ID="SingleLineComment">//do nothing
+<FONT ID="LN">275 </FONT><A NAME="275"></A></FONT>                }
+<FONT ID="LN">276 </FONT><A NAME="276"></A>            }
+<FONT ID="LN">277 </FONT><A NAME="277"></A>                        
+<FONT ID="LN">278 </FONT><A NAME="278"></A>            <FONT ID="If">if</FONT>(flag || fileName.equals(<FONT ID="StringLiteral">""</FONT>)){   
+<FONT ID="LN">279 </FONT><A NAME="279"></A>                MainInterface.displayMessage(<FONT ID="StringLiteral">"ERROR: invalid file name"</FONT>);
+<FONT ID="LN">280 </FONT><A NAME="280"></A>                <FONT ID="This">this</FONT>.fileT.setText(<FONT ID="StringLiteral">""</FONT>);
+<FONT ID="LN">281 </FONT><A NAME="281"></A>            }
+<FONT ID="LN">282 </FONT><A NAME="282"></A>            <FONT ID="Else">else</FONT>{ 
+<FONT ID="LN">283 </FONT><A NAME="283"></A>                createInstanceWorld();
+<FONT ID="LN">284 </FONT><A NAME="284"></A>                <FONT ID="This">this</FONT>.dispose();
+<FONT ID="LN">285 </FONT><A NAME="285"></A>            }
+<FONT ID="LN">286 </FONT><A NAME="286"></A>        }
+<FONT ID="LN">287 </FONT><A NAME="287"></A>        <FONT ID="Else">else</FONT>{<FONT ID="This">this</FONT>.dispose();}
+<FONT ID="LN">288 </FONT><A NAME="288"></A>    }
+<FONT ID="LN">289 </FONT><A NAME="289"></A>}</pre><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SaveWorldDialog</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+
+</BODY>
+</HTML>

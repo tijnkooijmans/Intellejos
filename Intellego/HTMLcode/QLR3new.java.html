@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.0.9">
+<TITLE>QLR3new (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">QLR3new</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<A NAME="1"></A><FONT ID="Import">import</FONT> <A HREF="interfaces/Controller.java.html">interfaces.Controller</A>;
+<A NAME="2"></A><FONT ID="Import">import</FONT> <A HREF="interfaces/AbstractRobot.java.html">interfaces.AbstractRobot</A>;
+<A NAME="3"></A>
+<A NAME="4"></A><FONT ID="Import">import</FONT> java.lang.*;
+<A NAME="5"></A><FONT ID="Import">import</FONT> java.util.*;
+<A NAME="6"></A>
+<A NAME="7"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> QLR3new <FONT ID="Extends">extends</FONT> <A HREF="interfaces/Controller.java.html">Controller</A>
+<A NAME="8"></A>{
+<A NAME="9"></A>    <FONT ID="FormalComment">/******************************************************************
+<A NAME="10"></A>                  Variables, parameters &amp; data structures
+<A NAME="11"></A>    *******************************************************************/</FONT>
+<A NAME="12"></A>    
+<A NAME="13"></A>    <FONT ID="Private">private</FONT> <A HREF="interfaces/AbstractRobot.java.html">AbstractRobot</A> robot;    <FONT ID="SingleLineComment">// this controller's robot
+<A NAME="14"></A></FONT>    
+<A NAME="15"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> STATES=<FONT ID="IntegerLiteral">4</FONT>;           <FONT ID="SingleLineComment">// no. of states
+<A NAME="16"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> ACTIONS=<FONT ID="IntegerLiteral">5</FONT>;          <FONT ID="SingleLineComment">// no. of actions
+<A NAME="17"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> LEEWAY=<FONT ID="IntegerLiteral">6</FONT>;           <FONT ID="SingleLineComment">// leeway for state decision
+<A NAME="18"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> REWARD_LEEWAY=<FONT ID="IntegerLiteral">1</FONT>;    <FONT ID="SingleLineComment">// leeway for reward
+<A NAME="19"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> SLEEP_TIME=<FONT ID="IntegerLiteral">500</FONT>;
+<A NAME="20"></A>    <FONT ID="Int">int</FONT> STOP_THRESHOLD=<FONT ID="IntegerLiteral">98</FONT>;
+<A NAME="21"></A>    
+<A NAME="22"></A>    <FONT ID="SingleLineComment">// sensor type array
+<A NAME="23"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT>[] sensors={Controller.SENSOR_TYPE_LIGHT,Controller.SENSOR_TYPE_LIGHT,Controller.SENSOR_TYPE_LIGHT};
+<A NAME="24"></A>    
+<A NAME="25"></A>    <FONT ID="SingleLineComment">// states
+<A NAME="26"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> S1=<FONT ID="IntegerLiteral">0</FONT>;
+<A NAME="27"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> S2=<FONT ID="IntegerLiteral">1</FONT>;
+<A NAME="28"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> S3=<FONT ID="IntegerLiteral">2</FONT>;
+<A NAME="29"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> S4=<FONT ID="IntegerLiteral">3</FONT>;
+<A NAME="30"></A>    
+<A NAME="31"></A>    <FONT ID="SingleLineComment">// actions
+<A NAME="32"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> A1=<FONT ID="IntegerLiteral">0</FONT>;
+<A NAME="33"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> A2=<FONT ID="IntegerLiteral">1</FONT>;
+<A NAME="34"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> A3=<FONT ID="IntegerLiteral">2</FONT>;
+<A NAME="35"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> A4=<FONT ID="IntegerLiteral">3</FONT>;
+<A NAME="36"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> A5=<FONT ID="IntegerLiteral">4</FONT>;
+<A NAME="37"></A>    
+<A NAME="38"></A>    <FONT ID="SingleLineComment">// variables
+<A NAME="39"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> state, newState, prevLight, newLight, reward, action;
+<A NAME="40"></A>    <FONT ID="Private">private</FONT> <FONT ID="Boolean">boolean</FONT> running;
+<A NAME="41"></A>    <FONT ID="Private">private</FONT> <FONT ID="Boolean">boolean</FONT> paused=<FONT ID="False">false</FONT>;   
+<A NAME="42"></A>
+<A NAME="43"></A>    <FONT ID="SingleLineComment">// the Q table
+<A NAME="44"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Double">double</FONT> table[][]=<FONT ID="New">new</FONT> <FONT ID="Double">double</FONT>[STATES][ACTIONS]; 
+<A NAME="45"></A>    
+<A NAME="46"></A>    <FONT ID="SingleLineComment">// learning rate
+<A NAME="47"></A></FONT>    <FONT ID="Private">private</FONT> <FONT ID="Double">double</FONT> learningRate=<FONT ID="FloatPointLiteral">1.0</FONT>;
+<A NAME="48"></A>    
+<A NAME="49"></A>    <FONT ID="FormalComment">/******************************************************************
+<A NAME="50"></A>                      Methods required by Controller
+<A NAME="51"></A>    *******************************************************************/</FONT>
+<A NAME="52"></A>    
+<A NAME="53"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> initController(<A HREF="interfaces/AbstractRobot.java.html">AbstractRobot</A> r)
+<A NAME="54"></A>    {
+<A NAME="55"></A>        robot=r;
+<A NAME="56"></A>        
+<A NAME="57"></A>        <FONT ID="SingleLineComment">// initialise the Q table
+<A NAME="58"></A></FONT>        initTable();
+<A NAME="59"></A>        
+<A NAME="60"></A>        <FONT ID="SingleLineComment">// initialise sensor types
+<A NAME="61"></A></FONT>        sensors[<FONT ID="IntegerLiteral">0</FONT>]=Controller.SENSOR_TYPE_LIGHT;
+<A NAME="62"></A>        sensors[<FONT ID="IntegerLiteral">1</FONT>]=Controller.SENSOR_TYPE_LIGHT;
+<A NAME="63"></A>        sensors[<FONT ID="IntegerLiteral">2</FONT>]=Controller.SENSOR_TYPE_LIGHT;
+<A NAME="64"></A>    }
+<A NAME="65"></A>    
+<A NAME="66"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT>[] getSensors()
+<A NAME="67"></A>    {
+<A NAME="68"></A>        <FONT ID="Return">return</FONT> sensors;
+<A NAME="69"></A>    }
+<A NAME="70"></A>    
+<A NAME="71"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> run()
+<A NAME="72"></A>    {
+<A NAME="73"></A>        <FONT ID="SingleLineComment">// set running to true
+<A NAME="74"></A></FONT>        running=<FONT ID="True">true</FONT>;
+<A NAME="75"></A>        
+<A NAME="76"></A>        <FONT ID="SingleLineComment">// call main loop (will return when running=false)
+<A NAME="77"></A></FONT>        begin();
+<A NAME="78"></A>    }
+<A NAME="79"></A>    
+<A NAME="80"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> halt()
+<A NAME="81"></A>    {
+<A NAME="82"></A>        <FONT ID="SingleLineComment">// set running to false, this will force run() to return, and therefore 
+<A NAME="83"></A></FONT>        <FONT ID="SingleLineComment">// stop the controller's thread
+<A NAME="84"></A></FONT>        running=<FONT ID="False">false</FONT>;
+<A NAME="85"></A>        
+<A NAME="86"></A>        <FONT ID="SingleLineComment">// also stop the robot
+<A NAME="87"></A></FONT>        robot.stopMoving();
+<A NAME="88"></A>    }
+<A NAME="89"></A>    
+<A NAME="90"></A>    <FONT ID="Public">public</FONT> <A HREF="interfaces/AbstractRobot.java.html">AbstractRobot</A> getRobot()
+<A NAME="91"></A>    {
+<A NAME="92"></A>        <FONT ID="Return">return</FONT> robot;
+<A NAME="93"></A>    }
+<A NAME="94"></A>    
+<A NAME="95"></A>    <FONT ID="FormalComment">/******************************************************************
+<A NAME="96"></A>                              Other methods
+<A NAME="97"></A>    *******************************************************************/</FONT>
+<A NAME="98"></A>    
+<A NAME="99"></A>    <FONT ID="FormalComment">/**
+<A NAME="100"></A>    * Generates a random number between 0 and the limit
+<A NAME="101"></A>    *
+<A NAME="102"></A>    * @param limit
+<A NAME="103"></A>    * @return the random number as an int
+<A NAME="104"></A>    */</FONT>
+<A NAME="105"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> rand(<FONT ID="Int">int</FONT> limit)
+<A NAME="106"></A>    {
+<A NAME="107"></A>        <FONT ID="Return">return</FONT> (<FONT ID="Int">int</FONT>) (Math.random()*(limit+<FONT ID="IntegerLiteral">1</FONT>));
+<A NAME="108"></A>    } 
+<A NAME="109"></A>    
+<A NAME="110"></A>    <FONT ID="FormalComment">/**
+<A NAME="111"></A>    * Initialises the Q-table entries to 0.0
+<A NAME="112"></A>    */</FONT>
+<A NAME="113"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> initTable()
+<A NAME="114"></A>    {
+<A NAME="115"></A>        <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;STATES;i++)
+<A NAME="116"></A>        {
+<A NAME="117"></A>            <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> j=<FONT ID="IntegerLiteral">0</FONT>;j&lt;ACTIONS;j++)
+<A NAME="118"></A>            {
+<A NAME="119"></A>                <FONT ID="Int">int</FONT> x=rand(<FONT ID="IntegerLiteral">3</FONT>);
+<A NAME="120"></A>                table[i][j]=x;
+<A NAME="121"></A>            }           
+<A NAME="122"></A>        }
+<A NAME="123"></A>    }
+<A NAME="124"></A>    
+<A NAME="125"></A>    <FONT ID="FormalComment">/**
+<A NAME="126"></A>    * Updates the utility table according to the Q learning equation
+<A NAME="127"></A>    */</FONT>
+<A NAME="128"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> updateTable()
+<A NAME="129"></A>    {
+<A NAME="130"></A>        <FONT ID="SingleLineComment">// main q learning update equation
+<A NAME="131"></A></FONT>        table[state][action]=learningRate*(table[state][action]+reward);
+<A NAME="132"></A>        
+<A NAME="133"></A>        <FONT ID="MultiLineComment">/*
+<A NAME="134"></A>        // print the Q table, remember this can only happen in the simulator
+<A NAME="135"></A>        System.out.println("\nQ table: ");
+<A NAME="136"></A>        for (int i=0;i&lt;STATES;i++)
+<A NAME="137"></A>        {
+<A NAME="138"></A>            for (int j=0;j&lt;ACTIONS;j++)
+<A NAME="139"></A>            {
+<A NAME="140"></A>                System.out.print(table[i][j]+" ");
+<A NAME="141"></A>            }
+<A NAME="142"></A>            System.out.println();
+<A NAME="143"></A>        }
+<A NAME="144"></A>        */</FONT>
+<A NAME="145"></A>    }
+<A NAME="146"></A>    
+<A NAME="147"></A>    <FONT ID="FormalComment">/**
+<A NAME="148"></A>    * The main Q(s,a) function
+<A NAME="149"></A>    *
+<A NAME="150"></A>    * @return the current best action to perform (as an int)
+<A NAME="151"></A>    */</FONT>
+<A NAME="152"></A>    <FONT ID="Public">public</FONT> <FONT ID="Int">int</FONT> Q(<FONT ID="Int">int</FONT> STATE)
+<A NAME="153"></A>    {
+<A NAME="154"></A>        <FONT ID="Int">int</FONT> highest=<FONT ID="IntegerLiteral">0</FONT>;
+<A NAME="155"></A>        
+<A NAME="156"></A>        <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;ACTIONS;i++)
+<A NAME="157"></A>        {
+<A NAME="158"></A>            <FONT ID="If">if</FONT>(table[STATE][i]&gt;table[STATE][highest])
+<A NAME="159"></A>            {
+<A NAME="160"></A>                highest=i;
+<A NAME="161"></A>            }
+<A NAME="162"></A>        }
+<A NAME="163"></A>        
+<A NAME="164"></A>        <FONT ID="Return">return</FONT> highest;
+<A NAME="165"></A>    }
+<A NAME="166"></A>    
+<A NAME="167"></A>    <FONT ID="FormalComment">/**
+<A NAME="168"></A>    * Sets the system going
+<A NAME="169"></A>    */</FONT>
+<A NAME="170"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> begin()
+<A NAME="171"></A>    {
+<A NAME="172"></A>        <FONT ID="Int">int</FONT> exploreRate=<FONT ID="IntegerLiteral">9</FONT>;
+<A NAME="173"></A>        
+<A NAME="174"></A>        <FONT ID="SingleLineComment">// establish initial state of robot
+<A NAME="175"></A></FONT>        
+<A NAME="176"></A>        <FONT ID="If">if</FONT>(robot.getSensor1() &gt; robot.getSensor2() &amp;&amp; robot.getSensor2() &gt; robot.getSensor3()){newState=S1;}
+<A NAME="177"></A>        <FONT ID="If">if</FONT>(robot.getSensor1() &gt; robot.getSensor2() &amp;&amp; robot.getSensor2() &lt; robot.getSensor3()){newState=S2;}
+<A NAME="178"></A>        <FONT ID="If">if</FONT>(robot.getSensor1() &lt; robot.getSensor2() &amp;&amp; robot.getSensor2() &gt; robot.getSensor3()){newState=S3;}
+<A NAME="179"></A>        <FONT ID="If">if</FONT>(robot.getSensor1() &lt; robot.getSensor2() &amp;&amp; robot.getSensor2() &lt; robot.getSensor3()){newState=S4;}
+<A NAME="180"></A>        
+<A NAME="181"></A>        <FONT ID="SingleLineComment">// get current light level
+<A NAME="182"></A></FONT>        newLight=robot.getSensor2();
+<A NAME="183"></A>        
+<A NAME="184"></A>        <FONT ID="SingleLineComment">// the tolerance of the robot to light, used to help move 
+<A NAME="185"></A></FONT>        <FONT ID="SingleLineComment">// the robot towards light
+<A NAME="186"></A></FONT>        <FONT ID="SingleLineComment">// int tolerance=0;
+<A NAME="187"></A></FONT>        
+<A NAME="188"></A>        <FONT ID="SingleLineComment">// main loop
+<A NAME="189"></A></FONT>        <FONT ID="While">while</FONT> (running)
+<A NAME="190"></A>        {
+<A NAME="191"></A>
+<A NAME="192"></A>                <FONT ID="While">while</FONT> (!paused &amp;&amp; running) { <FONT ID="SingleLineComment">//gbb
+<A NAME="193"></A></FONT>
+<A NAME="194"></A>            <FONT ID="SingleLineComment">// save current light level
+<A NAME="195"></A></FONT>            prevLight=newLight;
+<A NAME="196"></A>            
+<A NAME="197"></A>            <FONT ID="SingleLineComment">// establish current state of robot
+<A NAME="198"></A></FONT>            state=newState;
+<A NAME="199"></A>            
+<A NAME="200"></A>            <FONT ID="SingleLineComment">// choose action randomly 10% of thetime
+<A NAME="201"></A></FONT>            <FONT ID="SingleLineComment">//if(rand(9)==0){action=rand(ACTIONS-1);}
+<A NAME="202"></A></FONT>            <FONT ID="If">if</FONT>(rand(exploreRate)==<FONT ID="IntegerLiteral">0</FONT>)
+<A NAME="203"></A>            {
+<A NAME="204"></A>                action=rand(ACTIONS-<FONT ID="IntegerLiteral">1</FONT>);
+<A NAME="205"></A>                <FONT ID="SingleLineComment">// System.out.println("Exploring... rate: "+exploreRate);
+<A NAME="206"></A></FONT>                exploreRate++;
+<A NAME="207"></A>            }
+<A NAME="208"></A>            <FONT ID="SingleLineComment">// and according to Q table the rest
+<A NAME="209"></A></FONT>            <FONT ID="Else">else</FONT>{action=Q(state);}
+<A NAME="210"></A>            
+<A NAME="211"></A>            <FONT ID="SingleLineComment">// perform chosen action
+<A NAME="212"></A></FONT>            <FONT ID="If">if</FONT>(action==A1){robot.forward();}
+<A NAME="213"></A>            <FONT ID="If">if</FONT>(action==A2){robot.backward();}
+<A NAME="214"></A>            <FONT ID="If">if</FONT>(action==A3){robot.right();}
+<A NAME="215"></A>            <FONT ID="If">if</FONT>(action==A4){robot.left();}
+<A NAME="216"></A>            <FONT ID="If">if</FONT>(action==A5){robot.stopMoving();}
+<A NAME="217"></A>            
+<A NAME="218"></A>            <FONT ID="SingleLineComment">// sleep for a wee bit to allow the action to have some effect
+<A NAME="219"></A></FONT>            <FONT ID="Try">try</FONT>{sleep(SLEEP_TIME);}<FONT ID="Catch">catch</FONT>(Exception e){}
+<A NAME="220"></A>            
+<A NAME="221"></A>            <FONT ID="SingleLineComment">// stop robot to begin loop again
+<A NAME="222"></A></FONT>            robot.stopMoving();
+<A NAME="223"></A>            
+<A NAME="224"></A>            <FONT ID="SingleLineComment">// determine new light level
+<A NAME="225"></A></FONT>            newLight=robot.getSensor2();
+<A NAME="226"></A>            
+<A NAME="227"></A>            <FONT ID="SingleLineComment">// and reward accordingly
+<A NAME="228"></A></FONT>            <FONT ID="If">if</FONT> (newLight &gt; prevLight+REWARD_LEEWAY){reward=<FONT ID="IntegerLiteral">1</FONT>;robot.beep();}
+<A NAME="229"></A>            <FONT ID="Else">else</FONT> <FONT ID="If">if</FONT> (newLight &lt; prevLight){reward=-<FONT ID="IntegerLiteral">1</FONT>;}
+<A NAME="230"></A>            <FONT ID="Else">else</FONT> {reward=<FONT ID="IntegerLiteral">0</FONT>;}
+<A NAME="231"></A>            
+<A NAME="232"></A>            <FONT ID="SingleLineComment">// establish new state of robot
+<A NAME="233"></A></FONT>            <FONT ID="If">if</FONT>(robot.getSensor1() &gt; robot.getSensor2() &amp;&amp; robot.getSensor2() &gt; robot.getSensor3()){newState=S1;}
+<A NAME="234"></A>            <FONT ID="If">if</FONT>(robot.getSensor1() &gt; robot.getSensor2() &amp;&amp; robot.getSensor2() &lt; robot.getSensor3()){newState=S2;}
+<A NAME="235"></A>            <FONT ID="If">if</FONT>(robot.getSensor1() &lt; robot.getSensor2() &amp;&amp; robot.getSensor2() &gt; robot.getSensor3()){newState=S3;}
+<A NAME="236"></A>            <FONT ID="If">if</FONT>(robot.getSensor1() &lt; robot.getSensor2() &amp;&amp; robot.getSensor2() &lt; robot.getSensor3()){newState=S4;}
+<A NAME="237"></A>            
+<A NAME="238"></A>            <FONT ID="SingleLineComment">// update table
+<A NAME="239"></A></FONT>            updateTable();
+<A NAME="240"></A>            
+<A NAME="241"></A>            <FONT ID="SingleLineComment">// decay learning rate
+<A NAME="242"></A></FONT>            <FONT ID="SingleLineComment">//learningRate-=0.02;
+<A NAME="243"></A></FONT>            
+<A NAME="244"></A>            <FONT ID="SingleLineComment">// check if stop threshold is met
+<A NAME="245"></A></FONT>            <FONT ID="If">if</FONT>(robot.getSensor2()&gt;STOP_THRESHOLD)
+<A NAME="246"></A>            {
+<A NAME="247"></A>                <FONT ID="SingleLineComment">// stop
+<A NAME="248"></A></FONT>                robot.beep();
+<A NAME="249"></A>                robot.beep();
+<A NAME="250"></A>                robot.beep();
+<A NAME="251"></A>                learningRate=<FONT ID="FloatPointLiteral">0.0</FONT>;
+<A NAME="252"></A>            }
+<A NAME="253"></A>        }
+<A NAME="254"></A>                <FONT ID="Try">try</FONT>{Thread.sleep(SLEEP_TIME);}<FONT ID="Catch">catch</FONT>(Exception e){}
+<A NAME="255"></A>        }
+<A NAME="256"></A>
+<A NAME="257"></A>    }
+<A NAME="258"></A>
+<A NAME="259"></A>        <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> pause() {
+<A NAME="260"></A>
+<A NAME="261"></A>                paused=<FONT ID="True">true</FONT>;
+<A NAME="262"></A>
+<A NAME="263"></A>        }
+<A NAME="264"></A>
+<A NAME="265"></A>        <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> unpause(){
+<A NAME="266"></A>
+<A NAME="267"></A>                paused=<FONT ID="False">false</FONT>;
+<A NAME="268"></A>
+<A NAME="269"></A>        }
+<A NAME="270"></A>
+<A NAME="271"></A>
+<A NAME="272"></A>}
+<A NAME="273"></A></pre><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">QLR3new</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+
+</BODY>
+</HTML>

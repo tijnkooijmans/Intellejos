@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="InitRobotDialog.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="InitRobotDialog"/>
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="InitRobotDialog"/>
+    </fileobject>
+    <fileobject name="SaveWorldDialog.java">
+        <attr name="class_dependency_javax.swing.JDialog" stringvalue="SaveWorldDialog"/>
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="SaveWorldDialog"/>
+    </fileobject>
+    <fileobject name="ExternalMessager.java">
+        <attr name="class_dependency_javax.swing.JInternalFrame" stringvalue="ExternalMessager"/>
+    </fileobject>
+    <fileobject name="GridOptionDialog.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="GridOptionDialog"/>
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="GridOptionDialog"/>
+    </fileobject>
+    <fileobject name="GetImage.java">
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="GetImage"/>
+    </fileobject>
+    <fileobject name="ColorOptionDialog.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="ColorOptionDialog"/>
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="ColorOptionDialog"/>
+    </fileobject>
+    <fileobject name="AdaptiveClassLoader.java">
+        <attr name="class_dependency_java.lang.ClassLoader" stringvalue="AdaptiveClassLoader"/>
+    </fileobject>
+    <fileobject name="HelpDialog.java">
+        <attr name="class_dependency_javax.swing.event.HyperlinkListener" stringvalue="HelpDialog"/>
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="HelpDialog"/>
+        <attr name="class_dependency_javax.swing.event.TreeSelectionListener" stringvalue="HelpDialog"/>
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="HelpDialog"/>
+        <attr name="class_dependency_javax.swing.tree.DefaultTreeCellRenderer" stringvalue="HelpDialog.MyRenderer"/>
+    </fileobject>
+    <fileobject name="CodeEditor.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="CodeEditor.TListener"/>
+        <attr name="class_dependency_javax.swing.JInternalFrame" stringvalue="CodeEditor"/>
+    </fileobject>
+    <fileobject name="About.java">
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="About"/>
+    </fileobject>
+    <fileobject name="GridDisplay.java">
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="GridDisplay"/>
+    </fileobject>
+    <fileobject name="RobotRotation.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="RobotRotation"/>
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="RobotRotation"/>
+    </fileobject>
+    <fileobject name="IntellegoDialog.java">
+        <attr name="class_dependency_javax.swing.JDialog" stringvalue="IntellegoDialog"/>
+        <attr name="class_dependency_java.awt.event.WindowListener" stringvalue="IntellegoDialog"/>
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="IntellegoDialog"/>
+        <attr name="class_dependency_java.awt.event.WindowFocusListener" stringvalue="IntellegoDialog"/>
+    </fileobject>
+    <fileobject name="MainInterface.java">
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="MainInterface"/>
+    </fileobject>
+    <fileobject name="LightSensorPropertiesDialog.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="LightSensorPropertiesDialog"/>
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="LightSensorPropertiesDialog"/>
+        <attr name="class_dependency_java.awt.event.WindowFocusListener" stringvalue="LightSensorPropertiesDialog"/>
+        <attr name="class_dependency_java.awt.event.ItemListener" stringvalue="LightSensorPropertiesDialog"/>
+        <attr name="class_dependency_javax.swing.event.ChangeListener" stringvalue="LightSensorPropertiesDialog"/>
+    </fileobject>
+    <fileobject name="SimpleDisplay.java">
+        <attr name="class_dependency_interfaces.SimDisplay" stringvalue="SimpleDisplay"/>
+    </fileobject>
+    <fileobject name="VerificationPopUp.java">
+        <attr name="class_dependency_javax.swing.JDialog" stringvalue="VerificationPopUp"/>
+        <attr name="class_dependency_java.awt.event.WindowListener" stringvalue="VerificationPopUp"/>
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="VerificationPopUp"/>
+        <attr name="class_dependency_java.awt.event.WindowFocusListener" stringvalue="VerificationPopUp"/>
+    </fileobject>
+    <fileobject name="ObjectEditDialog.java">
+        <attr name="class_dependency_java.awt.event.ActionListener" stringvalue="ObjectEditDialog"/>
+        <attr name="class_dependency_javax.swing.JPanel" stringvalue="ObjectEditDialog"/>
+    </fileobject>
+    <fileobject name="SimUI.java">
+        <attr name="class_dependency_java.lang.Thread" stringvalue="SimUI.GarbageCleanUp"/>
+        <attr name="class_dependency_javax.swing.JInternalFrame" stringvalue="SimUI"/>
+        <attr name="class_dependency_java.lang.Runnable" stringvalue="SimUI"/>
+        <attr name="class_dependency_java.awt.event.ItemListener" stringvalue="SimUI"/>
+    </fileobject>
+</attributes>

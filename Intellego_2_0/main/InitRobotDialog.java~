@@ -1,0 +1,169 @@
+package main;
+
+import intellego.Intellego;
+import util.*;
+import interfaces.*;
+import real.*;
+import simworldobjects.*;
+import main.*;
+
+import java.awt.*;
+import java.lang.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.io.*;
+
+/**
+* Provides a dialog box to get intial robot parameters from the user
+*
+* @author Graham Ritchie modified by: Simon Zienkiewicz
+* (robot voltage field was added)
+*/ 
+public class InitRobotDialog extends JDialog implements ActionListener
+{
+	private JTextField xField, zField, bField, cField;
+        private JLabel xLabel, zLabel, bLabel, cLabel;
+        private JButton OK, cancel;
+	private SimWorld world;
+	private Controller controller;
+	private SimDisplay display;
+
+        /**
+        * Displays a dialog box to get initial robot parameters, and creates and
+	* creates a new SimRCX wth these values.
+	*
+	* @param w the SimWorld for the thr new robot to exist in
+	* @param c the controller of the robot
+	* @param d the simdisplay to display this robot in
+        */
+        
+        public void createRobot(SimWorld w, Controller c, SimDisplay d)
+        {
+            setTitle("Initialise Robot:");
+            setSize(230,150);
+            setLocation(400,400);
+            setVisible(true);
+                       				
+            world=w;
+            controller=c;
+            display=d;
+				
+            Container mainPanel=getContentPane();
+            mainPanel.setLayout(new BorderLayout(1,1));
+
+            Container bottomPanel=new Container();
+            bottomPanel.setLayout(new BorderLayout(1,1));
+            
+            Container bottomBottomPanel=new Container();
+            bottomBottomPanel.setLayout(new BorderLayout(1,1));
+            
+            Container subMainPanel=new Container();
+            subMainPanel.setLayout(new BorderLayout(1,1));
+
+            Container topPanel=new Container();
+            topPanel.setLayout(new BorderLayout(1,1));
+
+            Container Panel1=new Container();
+            Panel1.setLayout(new BorderLayout(1,1));
+
+            Container Panel2=new Container();
+            Panel2.setLayout(new BorderLayout(1,1));
+
+            Container Panel3=new Container();
+            Panel3.setLayout(new BorderLayout(1,1));
+
+            Container Panel4=new Container();
+            Panel4.setLayout(new BorderLayout(1,1));
+
+            Container Panel5=new Container();
+            Panel5.setLayout(new FlowLayout());
+            
+            xField=new JTextField("400",4);
+            zField=new JTextField("500",4);
+            bField=new JTextField("0",4);
+            cField=new JTextField("7726",4);
+ 
+            xLabel=new JLabel("Enter X coordinate:");
+            zLabel=new JLabel("Enter Z coordinate:");
+            bLabel=new JLabel("Enter initial bearing:");
+            cLabel=new JLabel("Enter the battery voltage(mV):");
+
+            (OK=new JButton("OK")).addActionListener(this);
+            (cancel=new JButton("Cancel")).addActionListener(this);
+
+            Panel1.add("West",xLabel);
+            Panel1.add("East",xField);
+            Panel2.add("West",zLabel);
+            Panel2.add("East",zField);
+            Panel3.add("West",bLabel);
+            Panel3.add("East",bField);
+            Panel4.add("West",cLabel);
+            Panel4.add("East",cField);
+            
+            Panel5.add("South",OK);
+            Panel5.add("South",cancel);
+
+            topPanel.add("North",Panel1);
+            topPanel.add("South",Panel2);
+
+            bottomPanel.add("North",Panel3);
+            bottomPanel.add("South",Panel4);
+
+            bottomBottomPanel.add("North",Panel5);
+            
+            subMainPanel.add("North",topPanel);
+            subMainPanel.add("South",bottomPanel);
+
+            mainPanel.add("North",subMainPanel);
+            mainPanel.add("South",bottomBottomPanel);
+            this.show();
+
+        }
+
+        /**
+        *  Action event handler - creates a robot according to user input,
+        *  having check that the input is valid.
+        *
+        *  @param e the action event
+        */
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getSource()==OK)
+            {
+                
+                try{
+                    int x=Integer.parseInt(xField.getText());
+                    int z=Integer.parseInt(zField.getText());
+                    int b=Integer.parseInt(bField.getText());
+                    int c=Integer.parseInt(cField.getText());
+                    
+                    long X=(long)x;
+                    long Z=(long)z;
+                    long B=(long)b;
+                    
+                    //long C=(long)c;
+
+                    // create the robot
+                    SimRCX rcx=new SimRCX(world, controller, 30.0,40.0,60.0,"robot",X,0.0,Z,0.0,B,c);
+
+                    // add it to the controller
+                    controller.initController(rcx);
+
+                    // ... and add it to the world
+                    world.addObject((SimObject)rcx);
+
+                    display.repaint();
+
+                    dispose();
+                }
+                catch(Exception a){
+                    main.MainInterface.displayMessage("ERROR: Incorrect Input Type | FIX: Please try again, only entering INTEGERs");
+                    dispose();
+                }
+            }
+            else
+            {
+            //    dispose();
+            }
+	}
+}

@@ -1,0 +1,542 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.0.9">
+<TITLE>main.SimUI (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SimUI</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1   </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> <A HREF="../main.index.html" target="packageFrame">main</A>;
+<FONT ID="LN">2   </FONT><A NAME="2"></A>
+<FONT ID="LN">3   </FONT><A NAME="3"></A><FONT ID="Import">import</FONT> <A HREF="../simworldobjects.index.html" target="packageFrame">simworldobjects.*</A>;
+<FONT ID="LN">4   </FONT><A NAME="4"></A><FONT ID="Import">import</FONT> <A HREF="../intellego/Intellego.java.html">intellego.Intellego</A>;
+<FONT ID="LN">5   </FONT><A NAME="5"></A><FONT ID="Import">import</FONT> <A HREF="../util.index.html" target="packageFrame">util.*</A>;
+<FONT ID="LN">6   </FONT><A NAME="6"></A><FONT ID="Import">import</FONT> <A HREF="../interfaces.index.html" target="packageFrame">interfaces.*</A>;
+<FONT ID="LN">7   </FONT><A NAME="7"></A><FONT ID="Import">import</FONT> <A HREF="../real.index.html" target="packageFrame">real.*</A>;
+<FONT ID="LN">8   </FONT><A NAME="8"></A>
+<FONT ID="LN">9   </FONT><A NAME="9"></A><FONT ID="Import">import</FONT> java.awt.*;
+<FONT ID="LN">10  </FONT><A NAME="10"></A><FONT ID="Import">import</FONT> java.lang.*;
+<FONT ID="LN">11  </FONT><A NAME="11"></A><FONT ID="Import">import</FONT> java.awt.event.*;
+<FONT ID="LN">12  </FONT><A NAME="12"></A><FONT ID="Import">import</FONT> javax.swing.*;
+<FONT ID="LN">13  </FONT><A NAME="13"></A><FONT ID="Import">import</FONT> javax.swing.event.*;
+<FONT ID="LN">14  </FONT><A NAME="14"></A><FONT ID="Import">import</FONT> java.io.*;
+<FONT ID="LN">15  </FONT><A NAME="15"></A><FONT ID="Import">import</FONT> java.util.*;
+<FONT ID="LN">16  </FONT><A NAME="16"></A>
+<FONT ID="LN">17  </FONT><A NAME="17"></A><FONT ID="FormalComment">/**
+<FONT ID="LN">18  </FONT><A NAME="18"></A>* Provides a user interface for a simulation
+<FONT ID="LN">19  </FONT><A NAME="19"></A>*
+<FONT ID="LN">20  </FONT><A NAME="20"></A>* @author Graham Ritchie
+<FONT ID="LN">21  </FONT><A NAME="21"></A>*/</FONT>
+<FONT ID="LN">22  </FONT><A NAME="22"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> SimUI <FONT ID="Extends">extends</FONT> JInternalFrame <FONT ID="Implements">implements</FONT> Runnable
+<FONT ID="LN">23  </FONT><A NAME="23"></A>{
+<FONT ID="LN">24  </FONT><A NAME="24"></A>    <FONT ID="Private">private</FONT> Container mainContainer;
+<FONT ID="LN">25  </FONT><A NAME="25"></A>    <FONT ID="Private">private</FONT> <A HREF="../interfaces/SimDisplay.java.html">SimDisplay</A> display=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">26  </FONT><A NAME="26"></A>    <FONT ID="Private">private</FONT> JLayeredPane mainPane;
+<FONT ID="LN">27  </FONT><A NAME="27"></A>    <FONT ID="Private">private</FONT> LinkedList controllerList;
+<FONT ID="LN">28  </FONT><A NAME="28"></A>    <FONT ID="Private">private</FONT> LinkedList robotList;
+<FONT ID="LN">29  </FONT><A NAME="29"></A>    <FONT ID="Private">private</FONT> <A HREF="../interfaces/SimWorld.java.html">SimWorld</A> world=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">30  </FONT><A NAME="30"></A>    <FONT ID="Private">private</FONT> <FONT ID="Boolean">boolean</FONT> running=<FONT ID="False">false</FONT>;
+<FONT ID="LN">31  </FONT><A NAME="31"></A>    <FONT ID="Private">private</FONT> <FONT ID="Boolean">boolean</FONT> paused=<FONT ID="False">false</FONT>;
+<FONT ID="LN">32  </FONT><A NAME="32"></A>    <FONT ID="Private">private</FONT> <FONT ID="Int">int</FONT> UPDATE_TIME=<FONT ID="IntegerLiteral">30</FONT>;
+<FONT ID="LN">33  </FONT><A NAME="33"></A>    <FONT ID="Private">private</FONT> <FONT ID="Static">static</FONT> <FONT ID="Int">int</FONT> screenWidth=<FONT ID="IntegerLiteral">1000</FONT>;
+<FONT ID="LN">34  </FONT><A NAME="34"></A>    <FONT ID="Private">private</FONT> <FONT ID="Static">static</FONT> <FONT ID="Int">int</FONT> screenHeight=<FONT ID="IntegerLiteral">800</FONT>;
+<FONT ID="LN">35  </FONT><A NAME="35"></A>    
+<FONT ID="LN">36  </FONT><A NAME="36"></A>    <FONT ID="Private">private</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String NO_CLASS=<FONT ID="StringLiteral">"__NOCLASS__"</FONT>;
+<FONT ID="LN">37  </FONT><A NAME="37"></A>    
+<FONT ID="LN">38  </FONT><A NAME="38"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">39  </FONT><A NAME="39"></A>    * Sets up the main window for an empty simulation
+<FONT ID="LN">40  </FONT><A NAME="40"></A>    */</FONT>
+<FONT ID="LN">41  </FONT><A NAME="41"></A>    <FONT ID="Public">public</FONT> SimUI()
+<FONT ID="LN">42  </FONT><A NAME="42"></A>    {
+<FONT ID="LN">43  </FONT><A NAME="43"></A>        <FONT ID="SingleLineComment">// window setup
+<FONT ID="LN">44  </FONT><A NAME="44"></A></FONT>        <FONT ID="Super">super</FONT>(<FONT ID="StringLiteral">"Simulator:"</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>);
+<FONT ID="LN">45  </FONT><A NAME="45"></A>        setSize(screenWidth,screenHeight);
+<FONT ID="LN">46  </FONT><A NAME="46"></A>        
+<FONT ID="LN">47  </FONT><A NAME="47"></A>        setupWindow();
+<FONT ID="LN">48  </FONT><A NAME="48"></A>        
+<FONT ID="LN">49  </FONT><A NAME="49"></A>         <FONT ID="SingleLineComment">// stop the simulation when the window closes.
+<FONT ID="LN">50  </FONT><A NAME="50"></A></FONT>        addInternalFrameListener(<FONT ID="New">new</FONT> InternalFrameAdapter() 
+<FONT ID="LN">51  </FONT><A NAME="51"></A>        {
+<FONT ID="LN">52  </FONT><A NAME="52"></A>            <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> internalFrameClosing(InternalFrameEvent e) 
+<FONT ID="LN">53  </FONT><A NAME="53"></A>            {
+<FONT ID="LN">54  </FONT><A NAME="54"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.init(): simulator quitting"</FONT>);
+<FONT ID="LN">55  </FONT><A NAME="55"></A>                
+<FONT ID="LN">56  </FONT><A NAME="56"></A>                <FONT ID="SingleLineComment">// stop running (if we are)
+<FONT ID="LN">57  </FONT><A NAME="57"></A></FONT>                running=<FONT ID="False">false</FONT>;
+<FONT ID="LN">58  </FONT><A NAME="58"></A>            
+<FONT ID="LN">59  </FONT><A NAME="59"></A>                <FONT ID="SingleLineComment">// stop all the controllers
+<FONT ID="LN">60  </FONT><A NAME="60"></A></FONT>                <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;controllerList.size();i++)
+<FONT ID="LN">61  </FONT><A NAME="61"></A>                {
+<FONT ID="LN">62  </FONT><A NAME="62"></A>                    <A HREF="../interfaces/Controller.java.html">Controller</A> c=(<A HREF="../interfaces/Controller.java.html">Controller</A>)controllerList.get(i);
+<FONT ID="LN">63  </FONT><A NAME="63"></A>                    c.halt();
+<FONT ID="LN">64  </FONT><A NAME="64"></A>                }
+<FONT ID="LN">65  </FONT><A NAME="65"></A>            }
+<FONT ID="LN">66  </FONT><A NAME="66"></A>        });
+<FONT ID="LN">67  </FONT><A NAME="67"></A>    }
+<FONT ID="LN">68  </FONT><A NAME="68"></A>    
+<FONT ID="LN">69  </FONT><A NAME="69"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">70  </FONT><A NAME="70"></A>    * Loads a new simulation with the specified controller preloaded
+<FONT ID="LN">71  </FONT><A NAME="71"></A>    *
+<FONT ID="LN">72  </FONT><A NAME="72"></A>    * @param controllerClassName the class name of the controller
+<FONT ID="LN">73  </FONT><A NAME="73"></A>    */</FONT>
+<FONT ID="LN">74  </FONT><A NAME="74"></A>    <FONT ID="Public">public</FONT> SimUI(String controllerClassName)
+<FONT ID="LN">75  </FONT><A NAME="75"></A>    {
+<FONT ID="LN">76  </FONT><A NAME="76"></A>        <FONT ID="SingleLineComment">// window setup
+<FONT ID="LN">77  </FONT><A NAME="77"></A></FONT>        <FONT ID="Super">super</FONT>(<FONT ID="StringLiteral">"Simulator:"</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>,<FONT ID="True">true</FONT>);
+<FONT ID="LN">78  </FONT><A NAME="78"></A>        setSize(screenWidth,screenHeight);
+<FONT ID="LN">79  </FONT><A NAME="79"></A>        
+<FONT ID="LN">80  </FONT><A NAME="80"></A>        setupWindow();
+<FONT ID="LN">81  </FONT><A NAME="81"></A>        
+<FONT ID="LN">82  </FONT><A NAME="82"></A>        <FONT ID="SingleLineComment">// set up a world
+<FONT ID="LN">83  </FONT><A NAME="83"></A></FONT>        selectWorld();
+<FONT ID="LN">84  </FONT><A NAME="84"></A>        
+<FONT ID="LN">85  </FONT><A NAME="85"></A>        <FONT ID="SingleLineComment">// add this controller
+<FONT ID="LN">86  </FONT><A NAME="86"></A></FONT>        <A HREF="../interfaces/Controller.java.html">Controller</A> c=createController(controllerClassName);
+<FONT ID="LN">87  </FONT><A NAME="87"></A>        addController(c);
+<FONT ID="LN">88  </FONT><A NAME="88"></A>    }
+<FONT ID="LN">89  </FONT><A NAME="89"></A>    
+<FONT ID="LN">90  </FONT><A NAME="90"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">91  </FONT><A NAME="91"></A>    * Sets up the main window
+<FONT ID="LN">92  </FONT><A NAME="92"></A>    */</FONT>
+<FONT ID="LN">93  </FONT><A NAME="93"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> setupWindow()
+<FONT ID="LN">94  </FONT><A NAME="94"></A>    {
+<FONT ID="LN">95  </FONT><A NAME="95"></A>        <FONT ID="SingleLineComment">// set up main pane
+<FONT ID="LN">96  </FONT><A NAME="96"></A></FONT>        mainContainer=getContentPane();
+<FONT ID="LN">97  </FONT><A NAME="97"></A>            mainContainer.setLayout(<FONT ID="New">new</FONT> BoxLayout(mainContainer,BoxLayout.Y_AXIS));
+<FONT ID="LN">98  </FONT><A NAME="98"></A>        
+<FONT ID="LN">99  </FONT><A NAME="99"></A>        <FONT ID="SingleLineComment">// create and set the menu bar
+<FONT ID="LN">100 </FONT><A NAME="100"></A></FONT>        JMenuBar mb=createMenuBar();
+<FONT ID="LN">101 </FONT><A NAME="101"></A>        setJMenuBar(mb);
+<FONT ID="LN">102 </FONT><A NAME="102"></A>        
+<FONT ID="LN">103 </FONT><A NAME="103"></A>        <FONT ID="SingleLineComment">// set up required lists
+<FONT ID="LN">104 </FONT><A NAME="104"></A></FONT>        controllerList=<FONT ID="New">new</FONT> LinkedList();
+<FONT ID="LN">105 </FONT><A NAME="105"></A>        robotList=<FONT ID="New">new</FONT> LinkedList();
+<FONT ID="LN">106 </FONT><A NAME="106"></A>    }   
+<FONT ID="LN">107 </FONT><A NAME="107"></A>    
+<FONT ID="LN">108 </FONT><A NAME="108"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">109 </FONT><A NAME="109"></A>    * Creates the menu bar for the main window, and adds action listeners 
+<FONT ID="LN">110 </FONT><A NAME="110"></A>    * to the menus.
+<FONT ID="LN">111 </FONT><A NAME="111"></A>    *
+<FONT ID="LN">112 </FONT><A NAME="112"></A>    * @return the menu bar
+<FONT ID="LN">113 </FONT><A NAME="113"></A>    */</FONT>
+<FONT ID="LN">114 </FONT><A NAME="114"></A>    <FONT ID="Private">private</FONT> JMenuBar createMenuBar()
+<FONT ID="LN">115 </FONT><A NAME="115"></A>    {
+<FONT ID="LN">116 </FONT><A NAME="116"></A>        <FONT ID="SingleLineComment">// menu bar
+<FONT ID="LN">117 </FONT><A NAME="117"></A></FONT>        JMenuBar mb=<FONT ID="New">new</FONT> JMenuBar();
+<FONT ID="LN">118 </FONT><A NAME="118"></A>        
+<FONT ID="LN">119 </FONT><A NAME="119"></A>        <FONT ID="SingleLineComment">// menus
+<FONT ID="LN">120 </FONT><A NAME="120"></A></FONT>        JMenu controlMenu=<FONT ID="New">new</FONT> JMenu(<FONT ID="StringLiteral">"Controls"</FONT>);
+<FONT ID="LN">121 </FONT><A NAME="121"></A>        
+<FONT ID="LN">122 </FONT><A NAME="122"></A>        <FONT ID="SingleLineComment">// control menu items
+<FONT ID="LN">123 </FONT><A NAME="123"></A></FONT>        JMenuItem pickWorld=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Pick SimWorld"</FONT>);
+<FONT ID="LN">124 </FONT><A NAME="124"></A>        JMenuItem addNewRobot=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Add Robot"</FONT>);
+<FONT ID="LN">125 </FONT><A NAME="125"></A>        JMenuItem startSim=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Start Simulation"</FONT>);
+<FONT ID="LN">126 </FONT><A NAME="126"></A>        JMenuItem pauseSim=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Pause Simulation"</FONT>); <FONT ID="SingleLineComment">//gbb
+<FONT ID="LN">127 </FONT><A NAME="127"></A></FONT>        JMenuItem unpauseSim=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Unpause Simulation"</FONT>); <FONT ID="SingleLineComment">//gbb
+<FONT ID="LN">128 </FONT><A NAME="128"></A></FONT>        JMenuItem stopSim=<FONT ID="New">new</FONT> JMenuItem(<FONT ID="StringLiteral">"Stop Simulation"</FONT>);
+<FONT ID="LN">129 </FONT><A NAME="129"></A>        
+<FONT ID="LN">130 </FONT><A NAME="130"></A>        <FONT ID="SingleLineComment">// add action listeners
+<FONT ID="LN">131 </FONT><A NAME="131"></A></FONT>        pickWorld.addActionListener(<FONT ID="New">new</FONT> ActionListener() 
+<FONT ID="LN">132 </FONT><A NAME="132"></A>        {
+<FONT ID="LN">133 </FONT><A NAME="133"></A>            <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e) 
+<FONT ID="LN">134 </FONT><A NAME="134"></A>            {
+<FONT ID="LN">135 </FONT><A NAME="135"></A>                selectWorld();
+<FONT ID="LN">136 </FONT><A NAME="136"></A>            }
+<FONT ID="LN">137 </FONT><A NAME="137"></A>        });
+<FONT ID="LN">138 </FONT><A NAME="138"></A>        
+<FONT ID="LN">139 </FONT><A NAME="139"></A>        addNewRobot.addActionListener(<FONT ID="New">new</FONT> ActionListener() 
+<FONT ID="LN">140 </FONT><A NAME="140"></A>        {
+<FONT ID="LN">141 </FONT><A NAME="141"></A>            <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e) 
+<FONT ID="LN">142 </FONT><A NAME="142"></A>            {
+<FONT ID="LN">143 </FONT><A NAME="143"></A>                addRobot();
+<FONT ID="LN">144 </FONT><A NAME="144"></A>            }
+<FONT ID="LN">145 </FONT><A NAME="145"></A>        });
+<FONT ID="LN">146 </FONT><A NAME="146"></A>        
+<FONT ID="LN">147 </FONT><A NAME="147"></A>        startSim.addActionListener(<FONT ID="New">new</FONT> ActionListener() 
+<FONT ID="LN">148 </FONT><A NAME="148"></A>        {
+<FONT ID="LN">149 </FONT><A NAME="149"></A>            <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e) 
+<FONT ID="LN">150 </FONT><A NAME="150"></A>            {
+<FONT ID="LN">151 </FONT><A NAME="151"></A>                startSimulation();
+<FONT ID="LN">152 </FONT><A NAME="152"></A>            }
+<FONT ID="LN">153 </FONT><A NAME="153"></A>        });
+<FONT ID="LN">154 </FONT><A NAME="154"></A>        
+<FONT ID="LN">155 </FONT><A NAME="155"></A>        stopSim.addActionListener(<FONT ID="New">new</FONT> ActionListener() 
+<FONT ID="LN">156 </FONT><A NAME="156"></A>        {
+<FONT ID="LN">157 </FONT><A NAME="157"></A>            <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> actionPerformed(ActionEvent e) 
+<FONT ID="LN">158 </FONT><A NAME="158"></A>            {
+<FONT ID="LN">159 </FONT><A NAME="159"></A>                stopSimulation();
+<FONT ID="LN">160 </FONT><A NAME="160"></A>            }
+<FONT ID="LN">161 </FONT><A NAME="161"></A>        });
+<FONT ID="LN">162 </FONT><A NAME="162"></A>        
+<FONT ID="LN">163 </FONT><A NAME="163"></A>        <FONT ID="SingleLineComment">// add items to control menu
+<FONT ID="LN">164 </FONT><A NAME="164"></A></FONT>        controlMenu.add(pickWorld);
+<FONT ID="LN">165 </FONT><A NAME="165"></A>        controlMenu.add(addNewRobot);
+<FONT ID="LN">166 </FONT><A NAME="166"></A>        controlMenu.add(startSim);
+<FONT ID="LN">167 </FONT><A NAME="167"></A>        controlMenu.add(stopSim);
+<FONT ID="LN">168 </FONT><A NAME="168"></A>        
+<FONT ID="LN">169 </FONT><A NAME="169"></A>        <FONT ID="SingleLineComment">// add menus to menu bar
+<FONT ID="LN">170 </FONT><A NAME="170"></A></FONT>        mb.add(controlMenu);
+<FONT ID="LN">171 </FONT><A NAME="171"></A>        
+<FONT ID="LN">172 </FONT><A NAME="172"></A>        <FONT ID="Return">return</FONT> mb;
+<FONT ID="LN">173 </FONT><A NAME="173"></A>    }
+<FONT ID="LN">174 </FONT><A NAME="174"></A>    
+<FONT ID="LN">175 </FONT><A NAME="175"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">176 </FONT><A NAME="176"></A>    * Main loop: updates the world and repaints the screen 
+<FONT ID="LN">177 </FONT><A NAME="177"></A>    */</FONT>
+<FONT ID="LN">178 </FONT><A NAME="178"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> run()
+<FONT ID="LN">179 </FONT><A NAME="179"></A>    {
+<FONT ID="LN">180 </FONT><A NAME="180"></A>        <FONT ID="If">if</FONT>(world==<FONT ID="Null">null</FONT> || display==<FONT ID="Null">null</FONT>)
+<FONT ID="LN">181 </FONT><A NAME="181"></A>        {
+<FONT ID="LN">182 </FONT><A NAME="182"></A>            MainInterface.displayMessage(<FONT ID="StringLiteral">"You must select a SimWorld and a SimDisplay first"</FONT>);
+<FONT ID="LN">183 </FONT><A NAME="183"></A>        }
+<FONT ID="LN">184 </FONT><A NAME="184"></A>        <FONT ID="Else">else</FONT>
+<FONT ID="LN">185 </FONT><A NAME="185"></A>        {
+<FONT ID="LN">186 </FONT><A NAME="186"></A>            <FONT ID="While">while</FONT> (running)
+<FONT ID="LN">187 </FONT><A NAME="187"></A>            {
+<FONT ID="LN">188 </FONT><A NAME="188"></A>                <FONT ID="SingleLineComment">// update SimWorld
+<FONT ID="LN">189 </FONT><A NAME="189"></A></FONT>                world.tick();
+<FONT ID="LN">190 </FONT><A NAME="190"></A>                
+<FONT ID="LN">191 </FONT><A NAME="191"></A>                <FONT ID="SingleLineComment">// repaint the display screen
+<FONT ID="LN">192 </FONT><A NAME="192"></A></FONT>                display.repaint();   
+<FONT ID="LN">193 </FONT><A NAME="193"></A>            
+<FONT ID="LN">194 </FONT><A NAME="194"></A>                <FONT ID="SingleLineComment">// sleep for a bit
+<FONT ID="LN">195 </FONT><A NAME="195"></A></FONT>                <FONT ID="Try">try</FONT>{Thread.sleep(UPDATE_TIME);}<FONT ID="Catch">catch</FONT>(Exception e){}
+<FONT ID="LN">196 </FONT><A NAME="196"></A>            }
+<FONT ID="LN">197 </FONT><A NAME="197"></A>        }
+<FONT ID="LN">198 </FONT><A NAME="198"></A>    }
+<FONT ID="LN">199 </FONT><A NAME="199"></A>    
+<FONT ID="LN">200 </FONT><A NAME="200"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">201 </FONT><A NAME="201"></A>    * Allows the user to pick a simworld for their simulation, and loads it
+<FONT ID="LN">202 </FONT><A NAME="202"></A>    */</FONT>
+<FONT ID="LN">203 </FONT><A NAME="203"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> selectWorld()
+<FONT ID="LN">204 </FONT><A NAME="204"></A>    {
+<FONT ID="LN">205 </FONT><A NAME="205"></A>        <FONT ID="SingleLineComment">// create simworld by getting the class name from the user
+<FONT ID="LN">206 </FONT><A NAME="206"></A></FONT>        String className=getClassName(<FONT ID="StringLiteral">"Pick a SimWorld class file:"</FONT>,<FONT ID="StringLiteral">"simworlds"</FONT>);
+<FONT ID="LN">207 </FONT><A NAME="207"></A>        
+<FONT ID="LN">208 </FONT><A NAME="208"></A>        <FONT ID="SingleLineComment">// check user actually selected a file
+<FONT ID="LN">209 </FONT><A NAME="209"></A></FONT>        <FONT ID="If">if</FONT> (className.equals(NO_CLASS))
+<FONT ID="LN">210 </FONT><A NAME="210"></A>        {
+<FONT ID="LN">211 </FONT><A NAME="211"></A>            <FONT ID="SingleLineComment">// do nothing
+<FONT ID="LN">212 </FONT><A NAME="212"></A></FONT>        }
+<FONT ID="LN">213 </FONT><A NAME="213"></A>        <FONT ID="Else">else</FONT>
+<FONT ID="LN">214 </FONT><A NAME="214"></A>        {
+<FONT ID="LN">215 </FONT><A NAME="215"></A>            <FONT ID="SingleLineComment">// if there is already a world open, stop the current sim and get rid of it.
+<FONT ID="LN">216 </FONT><A NAME="216"></A></FONT>            <FONT ID="If">if</FONT>(world!=<FONT ID="Null">null</FONT>)
+<FONT ID="LN">217 </FONT><A NAME="217"></A>            {
+<FONT ID="LN">218 </FONT><A NAME="218"></A>                stopSimulation();
+<FONT ID="LN">219 </FONT><A NAME="219"></A>                world=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">220 </FONT><A NAME="220"></A>                mainContainer.remove(display);
+<FONT ID="LN">221 </FONT><A NAME="221"></A>                display=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">222 </FONT><A NAME="222"></A>            }
+<FONT ID="LN">223 </FONT><A NAME="223"></A>            
+<FONT ID="LN">224 </FONT><A NAME="224"></A>            <FONT ID="SingleLineComment">// try to create a simworld from this class
+<FONT ID="LN">225 </FONT><A NAME="225"></A></FONT>            <A HREF="../interfaces/SimWorld.java.html">SimWorld</A> s=createSimWorld(className);
+<FONT ID="LN">226 </FONT><A NAME="226"></A>            
+<FONT ID="LN">227 </FONT><A NAME="227"></A>            <FONT ID="SingleLineComment">// check simworld creation was successful
+<FONT ID="LN">228 </FONT><A NAME="228"></A></FONT>            <FONT ID="If">if</FONT>(s!=<FONT ID="Null">null</FONT>)
+<FONT ID="LN">229 </FONT><A NAME="229"></A>            {
+<FONT ID="LN">230 </FONT><A NAME="230"></A>                <FONT ID="SingleLineComment">// set s as the world for this simulation
+<FONT ID="LN">231 </FONT><A NAME="231"></A></FONT>                world=s;
+<FONT ID="LN">232 </FONT><A NAME="232"></A>                
+<FONT ID="LN">233 </FONT><A NAME="233"></A>                <FONT ID="SingleLineComment">// and create a new display with this simworld
+<FONT ID="LN">234 </FONT><A NAME="234"></A></FONT>                display=<FONT ID="New">new</FONT> <A HREF="../main/SimpleDisplay.java.html">SimpleDisplay</A>(world);
+<FONT ID="LN">235 </FONT><A NAME="235"></A>                
+<FONT ID="LN">236 </FONT><A NAME="236"></A>                display.setVisible(<FONT ID="True">true</FONT>);
+<FONT ID="LN">237 </FONT><A NAME="237"></A>                
+<FONT ID="LN">238 </FONT><A NAME="238"></A>                <FONT ID="SingleLineComment">// add the simdisplay to the main pane
+<FONT ID="LN">239 </FONT><A NAME="239"></A></FONT>                mainContainer.add(display, BorderLayout.CENTER);
+<FONT ID="LN">240 </FONT><A NAME="240"></A>                
+<FONT ID="LN">241 </FONT><A NAME="241"></A>                <FONT ID="SingleLineComment">// set size to force display to repaint
+<FONT ID="LN">242 </FONT><A NAME="242"></A></FONT>                setSize(screenWidth,screenHeight);
+<FONT ID="LN">243 </FONT><A NAME="243"></A>            }
+<FONT ID="LN">244 </FONT><A NAME="244"></A>            <FONT ID="Else">else</FONT> <FONT ID="SingleLineComment">// simworld creation failed, so just bail out
+<FONT ID="LN">245 </FONT><A NAME="245"></A></FONT>            {
+<FONT ID="LN">246 </FONT><A NAME="246"></A>                MainInterface.displayMessage(<FONT ID="StringLiteral">"Failed to create SimWorld"</FONT>);
+<FONT ID="LN">247 </FONT><A NAME="247"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.selectWorld(): Failed to create SimWorld with name "</FONT>+className);
+<FONT ID="LN">248 </FONT><A NAME="248"></A>            }
+<FONT ID="LN">249 </FONT><A NAME="249"></A>        }
+<FONT ID="LN">250 </FONT><A NAME="250"></A>    }
+<FONT ID="LN">251 </FONT><A NAME="251"></A>    
+<FONT ID="LN">252 </FONT><A NAME="252"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">253 </FONT><A NAME="253"></A>    * Dynamically loads a simworld class
+<FONT ID="LN">254 </FONT><A NAME="254"></A>    *
+<FONT ID="LN">255 </FONT><A NAME="255"></A>    * @param name the name of the simworld as a string
+<FONT ID="LN">256 </FONT><A NAME="256"></A>    * 
+<FONT ID="LN">257 </FONT><A NAME="257"></A>    * @return the simworld, or null if unsuccessful
+<FONT ID="LN">258 </FONT><A NAME="258"></A>    */</FONT>
+<FONT ID="LN">259 </FONT><A NAME="259"></A>    <FONT ID="Public">public</FONT> <A HREF="../interfaces/SimWorld.java.html">SimWorld</A> createSimWorld(String name)
+<FONT ID="LN">260 </FONT><A NAME="260"></A>    {
+<FONT ID="LN">261 </FONT><A NAME="261"></A>        <A HREF="../interfaces/SimWorld.java.html">SimWorld</A> s=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">262 </FONT><A NAME="262"></A>        
+<FONT ID="LN">263 </FONT><A NAME="263"></A>        <FONT ID="Try">try</FONT>
+<FONT ID="LN">264 </FONT><A NAME="264"></A>        {
+<FONT ID="LN">265 </FONT><A NAME="265"></A>            <FONT ID="SingleLineComment">// try to create the class
+<FONT ID="LN">266 </FONT><A NAME="266"></A></FONT>            Class simworldClass=Class.forName(name);
+<FONT ID="LN">267 </FONT><A NAME="267"></A>            
+<FONT ID="LN">268 </FONT><A NAME="268"></A>            <FONT ID="Try">try</FONT>
+<FONT ID="LN">269 </FONT><A NAME="269"></A>            {
+<FONT ID="LN">270 </FONT><A NAME="270"></A>                <FONT ID="SingleLineComment">// try to cast the class to a SimWorld, this will fail if the class
+<FONT ID="LN">271 </FONT><A NAME="271"></A></FONT>                <FONT ID="SingleLineComment">// is not a valid Intellego SimWorld
+<FONT ID="LN">272 </FONT><A NAME="272"></A></FONT>                s=(<A HREF="../interfaces/SimWorld.java.html">SimWorld</A>)simworldClass.newInstance();
+<FONT ID="LN">273 </FONT><A NAME="273"></A>            }
+<FONT ID="LN">274 </FONT><A NAME="274"></A>            <FONT ID="Catch">catch</FONT> (Exception e)
+<FONT ID="LN">275 </FONT><A NAME="275"></A>            {
+<FONT ID="LN">276 </FONT><A NAME="276"></A>                MainInterface.displayMessage(<FONT ID="StringLiteral">"Error: this class is not a valid Intellego SimWorld"</FONT>);
+<FONT ID="LN">277 </FONT><A NAME="277"></A>            }
+<FONT ID="LN">278 </FONT><A NAME="278"></A>        }
+<FONT ID="LN">279 </FONT><A NAME="279"></A>        <FONT ID="Catch">catch</FONT> (Exception e)
+<FONT ID="LN">280 </FONT><A NAME="280"></A>        {
+<FONT ID="LN">281 </FONT><A NAME="281"></A>            <FONT ID="SingleLineComment">// failed to create the class, so return null
+<FONT ID="LN">282 </FONT><A NAME="282"></A></FONT>            MainInterface.displayMessage(<FONT ID="StringLiteral">"Error creating class"</FONT>);
+<FONT ID="LN">283 </FONT><A NAME="283"></A>            Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.createSimWorld(): Error creating class: "</FONT>+name+<FONT ID="StringLiteral">": "</FONT>+e);
+<FONT ID="LN">284 </FONT><A NAME="284"></A>            <FONT ID="Return">return</FONT> <FONT ID="Null">null</FONT>;
+<FONT ID="LN">285 </FONT><A NAME="285"></A>        }
+<FONT ID="LN">286 </FONT><A NAME="286"></A>        
+<FONT ID="LN">287 </FONT><A NAME="287"></A>        <FONT ID="SingleLineComment">// return the simworld
+<FONT ID="LN">288 </FONT><A NAME="288"></A></FONT>        <FONT ID="Return">return</FONT> s;
+<FONT ID="LN">289 </FONT><A NAME="289"></A>    }
+<FONT ID="LN">290 </FONT><A NAME="290"></A>    
+<FONT ID="LN">291 </FONT><A NAME="291"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">292 </FONT><A NAME="292"></A>    * Allows the user to pick a robot class, and loads it into this simulation
+<FONT ID="LN">293 </FONT><A NAME="293"></A>    */</FONT>
+<FONT ID="LN">294 </FONT><A NAME="294"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> addRobot()
+<FONT ID="LN">295 </FONT><A NAME="295"></A>    {
+<FONT ID="LN">296 </FONT><A NAME="296"></A>        <FONT ID="If">if</FONT>(world==<FONT ID="Null">null</FONT> || display==<FONT ID="Null">null</FONT>)
+<FONT ID="LN">297 </FONT><A NAME="297"></A>        {
+<FONT ID="LN">298 </FONT><A NAME="298"></A>            MainInterface.displayMessage(<FONT ID="StringLiteral">"You must select a SimWorld and a SimDisplay first"</FONT>);
+<FONT ID="LN">299 </FONT><A NAME="299"></A>        }
+<FONT ID="LN">300 </FONT><A NAME="300"></A>        <FONT ID="Else">else</FONT>
+<FONT ID="LN">301 </FONT><A NAME="301"></A>        {
+<FONT ID="LN">302 </FONT><A NAME="302"></A>            <FONT ID="SingleLineComment">// get the name of the class from the user
+<FONT ID="LN">303 </FONT><A NAME="303"></A></FONT>            String className=getClassName(<FONT ID="StringLiteral">"Pick a Controller class file:"</FONT>,<FONT ID="StringLiteral">"controllers"</FONT>);
+<FONT ID="LN">304 </FONT><A NAME="304"></A>            
+<FONT ID="LN">305 </FONT><A NAME="305"></A>            <FONT ID="SingleLineComment">// check user actually selected a class name
+<FONT ID="LN">306 </FONT><A NAME="306"></A></FONT>            <FONT ID="If">if</FONT> (className.equals(NO_CLASS))
+<FONT ID="LN">307 </FONT><A NAME="307"></A>            {
+<FONT ID="LN">308 </FONT><A NAME="308"></A>                 <FONT ID="SingleLineComment">// do nothing
+<FONT ID="LN">309 </FONT><A NAME="309"></A></FONT>            }
+<FONT ID="LN">310 </FONT><A NAME="310"></A>            <FONT ID="Else">else</FONT>
+<FONT ID="LN">311 </FONT><A NAME="311"></A>            {
+<FONT ID="LN">312 </FONT><A NAME="312"></A>                <FONT ID="SingleLineComment">// create an instance of this class
+<FONT ID="LN">313 </FONT><A NAME="313"></A></FONT>                <A HREF="../interfaces/Controller.java.html">Controller</A> c=createController(className);
+<FONT ID="LN">314 </FONT><A NAME="314"></A>                
+<FONT ID="LN">315 </FONT><A NAME="315"></A>                <FONT ID="If">if</FONT>(c!=<FONT ID="Null">null</FONT>)
+<FONT ID="LN">316 </FONT><A NAME="316"></A>                {
+<FONT ID="LN">317 </FONT><A NAME="317"></A>                    <FONT ID="SingleLineComment">// and add it to the system if it is not null
+<FONT ID="LN">318 </FONT><A NAME="318"></A></FONT>                    addController(c);
+<FONT ID="LN">319 </FONT><A NAME="319"></A>                }
+<FONT ID="LN">320 </FONT><A NAME="320"></A>                <FONT ID="Else">else</FONT>
+<FONT ID="LN">321 </FONT><A NAME="321"></A>                {
+<FONT ID="LN">322 </FONT><A NAME="322"></A>                    MainInterface.displayMessage(<FONT ID="StringLiteral">"Failed to create Controller"</FONT>);
+<FONT ID="LN">323 </FONT><A NAME="323"></A>                    Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.addRobot(): Failed to create Controller with name "</FONT>+className);
+<FONT ID="LN">324 </FONT><A NAME="324"></A>                }
+<FONT ID="LN">325 </FONT><A NAME="325"></A>            }
+<FONT ID="LN">326 </FONT><A NAME="326"></A>        }
+<FONT ID="LN">327 </FONT><A NAME="327"></A>    }
+<FONT ID="LN">328 </FONT><A NAME="328"></A>    
+<FONT ID="LN">329 </FONT><A NAME="329"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">330 </FONT><A NAME="330"></A>    * Gets the class name of the required class from the user 
+<FONT ID="LN">331 </FONT><A NAME="331"></A>    * using a JFileChooser
+<FONT ID="LN">332 </FONT><A NAME="332"></A>    *
+<FONT ID="LN">333 </FONT><A NAME="333"></A>    * @param title the title to display in the FileChooser window
+<FONT ID="LN">334 </FONT><A NAME="334"></A>    * @param base_dir the directory to start looking in
+<FONT ID="LN">335 </FONT><A NAME="335"></A>    *
+<FONT ID="LN">336 </FONT><A NAME="336"></A>    * @return the classname as string
+<FONT ID="LN">337 </FONT><A NAME="337"></A>    */</FONT>
+<FONT ID="LN">338 </FONT><A NAME="338"></A>    <FONT ID="Public">public</FONT> String getClassName(String title,String base_dir)
+<FONT ID="LN">339 </FONT><A NAME="339"></A>    {
+<FONT ID="LN">340 </FONT><A NAME="340"></A>        String className=<FONT ID="StringLiteral">" "</FONT>;
+<FONT ID="LN">341 </FONT><A NAME="341"></A>        
+<FONT ID="LN">342 </FONT><A NAME="342"></A>        <FONT ID="SingleLineComment">// pop up a file chooser dialog
+<FONT ID="LN">343 </FONT><A NAME="343"></A></FONT>        JFileChooser chooser=<FONT ID="New">new</FONT> JFileChooser(<FONT ID="New">new</FONT> File(System.getProperties().getProperty(<FONT ID="StringLiteral">"user.dir"</FONT>),base_dir));
+<FONT ID="LN">344 </FONT><A NAME="344"></A>        
+<FONT ID="LN">345 </FONT><A NAME="345"></A>        <FONT ID="SingleLineComment">// add a filename filter for class files
+<FONT ID="LN">346 </FONT><A NAME="346"></A></FONT>        String[] extensions={<FONT ID="StringLiteral">".class"</FONT>};
+<FONT ID="LN">347 </FONT><A NAME="347"></A>        chooser.addChoosableFileFilter(<FONT ID="New">new</FONT> <A HREF="../util/FileChooserFilter.java.html">FileChooserFilter</A>(extensions,<FONT ID="StringLiteral">"Compiled Class File"</FONT>));
+<FONT ID="LN">348 </FONT><A NAME="348"></A>        
+<FONT ID="LN">349 </FONT><A NAME="349"></A>        chooser.setDialogTitle(title);
+<FONT ID="LN">350 </FONT><A NAME="350"></A>        <FONT ID="Int">int</FONT> returnVal=chooser.showOpenDialog(<FONT ID="This">this</FONT>);
+<FONT ID="LN">351 </FONT><A NAME="351"></A>        
+<FONT ID="LN">352 </FONT><A NAME="352"></A>        <FONT ID="Try">try</FONT>
+<FONT ID="LN">353 </FONT><A NAME="353"></A>        {
+<FONT ID="LN">354 </FONT><A NAME="354"></A>            <FONT ID="If">if</FONT> (returnVal==JFileChooser.APPROVE_OPTION) <FONT ID="SingleLineComment">// user has selected a file
+<FONT ID="LN">355 </FONT><A NAME="355"></A></FONT>            {
+<FONT ID="LN">356 </FONT><A NAME="356"></A>                <FONT ID="SingleLineComment">// get the user's selected file
+<FONT ID="LN">357 </FONT><A NAME="357"></A></FONT>                File file=chooser.getSelectedFile();
+<FONT ID="LN">358 </FONT><A NAME="358"></A>                
+<FONT ID="LN">359 </FONT><A NAME="359"></A>                <FONT ID="SingleLineComment">// get the classname
+<FONT ID="LN">360 </FONT><A NAME="360"></A></FONT>                className=file.getName();
+<FONT ID="LN">361 </FONT><A NAME="361"></A>    
+<FONT ID="LN">362 </FONT><A NAME="362"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.getClassName(): opening file: "</FONT>+className);
+<FONT ID="LN">363 </FONT><A NAME="363"></A>                            
+<FONT ID="LN">364 </FONT><A NAME="364"></A>                <FONT ID="SingleLineComment">// chop .class extension off
+<FONT ID="LN">365 </FONT><A NAME="365"></A></FONT>                className=className.substring(<FONT ID="IntegerLiteral">0</FONT>,file.getName().length() - <FONT ID="IntegerLiteral">6</FONT>);
+<FONT ID="LN">366 </FONT><A NAME="366"></A>                
+<FONT ID="LN">367 </FONT><A NAME="367"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.getClassName(): attempting to open class: "</FONT>+className);
+<FONT ID="LN">368 </FONT><A NAME="368"></A>                
+<FONT ID="LN">369 </FONT><A NAME="369"></A>                <FONT ID="SingleLineComment">// return the classname
+<FONT ID="LN">370 </FONT><A NAME="370"></A></FONT>                <FONT ID="Return">return</FONT> (className);
+<FONT ID="LN">371 </FONT><A NAME="371"></A>            }
+<FONT ID="LN">372 </FONT><A NAME="372"></A>            <FONT ID="Else">else</FONT> <FONT ID="SingleLineComment">// user selected cancel or some other button we are going to ignore
+<FONT ID="LN">373 </FONT><A NAME="373"></A></FONT>            {
+<FONT ID="LN">374 </FONT><A NAME="374"></A>                <FONT ID="Return">return</FONT> NO_CLASS;
+<FONT ID="LN">375 </FONT><A NAME="375"></A>            }
+<FONT ID="LN">376 </FONT><A NAME="376"></A>        }
+<FONT ID="LN">377 </FONT><A NAME="377"></A>        <FONT ID="Catch">catch</FONT>(Exception e)
+<FONT ID="LN">378 </FONT><A NAME="378"></A>        {
+<FONT ID="LN">379 </FONT><A NAME="379"></A>            <FONT ID="Return">return</FONT> <FONT ID="Null">null</FONT>;
+<FONT ID="LN">380 </FONT><A NAME="380"></A>        }
+<FONT ID="LN">381 </FONT><A NAME="381"></A>    }
+<FONT ID="LN">382 </FONT><A NAME="382"></A>    
+<FONT ID="LN">383 </FONT><A NAME="383"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">384 </FONT><A NAME="384"></A>    * Dynamically loads a controller class
+<FONT ID="LN">385 </FONT><A NAME="385"></A>    *
+<FONT ID="LN">386 </FONT><A NAME="386"></A>    * @param name the name of the controller as a string
+<FONT ID="LN">387 </FONT><A NAME="387"></A>    *
+<FONT ID="LN">388 </FONT><A NAME="388"></A>    * @return the controller, or null if unsuccessful
+<FONT ID="LN">389 </FONT><A NAME="389"></A>    */</FONT>
+<FONT ID="LN">390 </FONT><A NAME="390"></A>    <FONT ID="Public">public</FONT> <A HREF="../interfaces/Controller.java.html">Controller</A> createController(String name)
+<FONT ID="LN">391 </FONT><A NAME="391"></A>    {
+<FONT ID="LN">392 </FONT><A NAME="392"></A>        <A HREF="../interfaces/Controller.java.html">Controller</A> c=<FONT ID="Null">null</FONT>;
+<FONT ID="LN">393 </FONT><A NAME="393"></A>        
+<FONT ID="LN">394 </FONT><A NAME="394"></A>        <FONT ID="Try">try</FONT>
+<FONT ID="LN">395 </FONT><A NAME="395"></A>        {
+<FONT ID="LN">396 </FONT><A NAME="396"></A>            <FONT ID="SingleLineComment">// try to create the class
+<FONT ID="LN">397 </FONT><A NAME="397"></A></FONT>            Class controllerClass=Class.forName(name);
+<FONT ID="LN">398 </FONT><A NAME="398"></A>            
+<FONT ID="LN">399 </FONT><A NAME="399"></A>            <FONT ID="Try">try</FONT>
+<FONT ID="LN">400 </FONT><A NAME="400"></A>            {
+<FONT ID="LN">401 </FONT><A NAME="401"></A>                <FONT ID="SingleLineComment">// try to cast the class to a Controller, this will fail if the class
+<FONT ID="LN">402 </FONT><A NAME="402"></A></FONT>                <FONT ID="SingleLineComment">// is not a valid Intellego Controller
+<FONT ID="LN">403 </FONT><A NAME="403"></A></FONT>                c=(<A HREF="../interfaces/Controller.java.html">Controller</A>)controllerClass.newInstance();
+<FONT ID="LN">404 </FONT><A NAME="404"></A>            }
+<FONT ID="LN">405 </FONT><A NAME="405"></A>            <FONT ID="Catch">catch</FONT> (Exception e)
+<FONT ID="LN">406 </FONT><A NAME="406"></A>            {
+<FONT ID="LN">407 </FONT><A NAME="407"></A>                MainInterface.displayMessage(<FONT ID="StringLiteral">"Error: class is not a valid Intellego Controller class"</FONT>);
+<FONT ID="LN">408 </FONT><A NAME="408"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.createController(): Attempt to create Intellego Controller "</FONT>+name+<FONT ID="StringLiteral">" failed. Not a valid Controller."</FONT>);
+<FONT ID="LN">409 </FONT><A NAME="409"></A>            }
+<FONT ID="LN">410 </FONT><A NAME="410"></A>        }
+<FONT ID="LN">411 </FONT><A NAME="411"></A>        <FONT ID="Catch">catch</FONT> (Exception e)
+<FONT ID="LN">412 </FONT><A NAME="412"></A>        {
+<FONT ID="LN">413 </FONT><A NAME="413"></A>            <FONT ID="SingleLineComment">// failed to create the class, so return null
+<FONT ID="LN">414 </FONT><A NAME="414"></A></FONT>            MainInterface.displayMessage(<FONT ID="StringLiteral">"Error creating class"</FONT>);
+<FONT ID="LN">415 </FONT><A NAME="415"></A>            Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.createController(): Error creating class "</FONT>+name+<FONT ID="StringLiteral">": "</FONT>+e);
+<FONT ID="LN">416 </FONT><A NAME="416"></A>            <FONT ID="Return">return</FONT> <FONT ID="Null">null</FONT>;
+<FONT ID="LN">417 </FONT><A NAME="417"></A>        }
+<FONT ID="LN">418 </FONT><A NAME="418"></A>        
+<FONT ID="LN">419 </FONT><A NAME="419"></A>        <FONT ID="SingleLineComment">// return the controller
+<FONT ID="LN">420 </FONT><A NAME="420"></A></FONT>        <FONT ID="Return">return</FONT> c;
+<FONT ID="LN">421 </FONT><A NAME="421"></A>    }
+<FONT ID="LN">422 </FONT><A NAME="422"></A>    
+<FONT ID="LN">423 </FONT><A NAME="423"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">424 </FONT><A NAME="424"></A>    * Adds a controller to this simulation
+<FONT ID="LN">425 </FONT><A NAME="425"></A>    *
+<FONT ID="LN">426 </FONT><A NAME="426"></A>    * @param c the controller to be added
+<FONT ID="LN">427 </FONT><A NAME="427"></A>    */</FONT>
+<FONT ID="LN">428 </FONT><A NAME="428"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> addController(<A HREF="../interfaces/Controller.java.html">Controller</A> c)
+<FONT ID="LN">429 </FONT><A NAME="429"></A>    {
+<FONT ID="LN">430 </FONT><A NAME="430"></A>        <FONT ID="SingleLineComment">// check if controller creation was successsful
+<FONT ID="LN">431 </FONT><A NAME="431"></A></FONT>        <FONT ID="If">if</FONT>(c!=<FONT ID="Null">null</FONT>)
+<FONT ID="LN">432 </FONT><A NAME="432"></A>        {
+<FONT ID="LN">433 </FONT><A NAME="433"></A>            <FONT ID="SingleLineComment">// ... if so then add this controller to the list
+<FONT ID="LN">434 </FONT><A NAME="434"></A></FONT>            controllerList.add(c);
+<FONT ID="LN">435 </FONT><A NAME="435"></A>            
+<FONT ID="LN">436 </FONT><A NAME="436"></A>            <FONT ID="SingleLineComment">// and get robot details
+<FONT ID="LN">437 </FONT><A NAME="437"></A></FONT>            <A HREF="../main/InitRobotDialog.java.html">InitRobotDialog</A> d=<FONT ID="New">new</FONT> <A HREF="../main/InitRobotDialog.java.html">InitRobotDialog</A>();
+<FONT ID="LN">438 </FONT><A NAME="438"></A>            
+<FONT ID="LN">439 </FONT><A NAME="439"></A>            <FONT ID="SingleLineComment">// create the robot
+<FONT ID="LN">440 </FONT><A NAME="440"></A></FONT>            d.createRobot(world,c,display);
+<FONT ID="LN">441 </FONT><A NAME="441"></A>            
+<FONT ID="LN">442 </FONT><A NAME="442"></A>            <FONT ID="SingleLineComment">// and repaint the display
+<FONT ID="LN">443 </FONT><A NAME="443"></A></FONT>            repaint();
+<FONT ID="LN">444 </FONT><A NAME="444"></A>        }
+<FONT ID="LN">445 </FONT><A NAME="445"></A>        <FONT ID="Else">else</FONT> <FONT ID="SingleLineComment">// failed to create controller
+<FONT ID="LN">446 </FONT><A NAME="446"></A></FONT>        {
+<FONT ID="LN">447 </FONT><A NAME="447"></A>            MainInterface.displayMessage(<FONT ID="StringLiteral">"Failed to add controller"</FONT>);
+<FONT ID="LN">448 </FONT><A NAME="448"></A>            Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.addController: Failed to add controller"</FONT>);
+<FONT ID="LN">449 </FONT><A NAME="449"></A>        }
+<FONT ID="LN">450 </FONT><A NAME="450"></A>    }
+<FONT ID="LN">451 </FONT><A NAME="451"></A>    
+<FONT ID="LN">452 </FONT><A NAME="452"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">453 </FONT><A NAME="453"></A>    * Starts this simulation (by starting a new thread for this instance)
+<FONT ID="LN">454 </FONT><A NAME="454"></A>    */</FONT>
+<FONT ID="LN">455 </FONT><A NAME="455"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> startSimulation()
+<FONT ID="LN">456 </FONT><A NAME="456"></A>    {
+<FONT ID="LN">457 </FONT><A NAME="457"></A>        <FONT ID="SingleLineComment">// check there is a simworld and a simdisplay open
+<FONT ID="LN">458 </FONT><A NAME="458"></A></FONT>        <FONT ID="If">if</FONT> (world==<FONT ID="Null">null</FONT> || display==<FONT ID="Null">null</FONT>)
+<FONT ID="LN">459 </FONT><A NAME="459"></A>        {
+<FONT ID="LN">460 </FONT><A NAME="460"></A>            <FONT ID="SingleLineComment">// if not display an error message
+<FONT ID="LN">461 </FONT><A NAME="461"></A></FONT>            MainInterface.displayMessage(<FONT ID="StringLiteral">"You must pick a SimWorld and a SimDisplay first"</FONT>);
+<FONT ID="LN">462 </FONT><A NAME="462"></A>        }
+<FONT ID="LN">463 </FONT><A NAME="463"></A>        <FONT ID="Else">else</FONT>
+<FONT ID="LN">464 </FONT><A NAME="464"></A>        {
+<FONT ID="LN">465 </FONT><A NAME="465"></A>            <FONT ID="SingleLineComment">// check we're not already running
+<FONT ID="LN">466 </FONT><A NAME="466"></A></FONT>            <FONT ID="If">if</FONT>(!running)
+<FONT ID="LN">467 </FONT><A NAME="467"></A>            {
+<FONT ID="LN">468 </FONT><A NAME="468"></A>                <FONT ID="SingleLineComment">// set this sim running in a new thread
+<FONT ID="LN">469 </FONT><A NAME="469"></A></FONT>                running=<FONT ID="True">true</FONT>;
+<FONT ID="LN">470 </FONT><A NAME="470"></A>                
+<FONT ID="LN">471 </FONT><A NAME="471"></A>                Thread t=<FONT ID="New">new</FONT> Thread(<FONT ID="This">this</FONT>);
+<FONT ID="LN">472 </FONT><A NAME="472"></A>                t.start();
+<FONT ID="LN">473 </FONT><A NAME="473"></A>            }
+<FONT ID="LN">474 </FONT><A NAME="474"></A>            
+<FONT ID="LN">475 </FONT><A NAME="475"></A>            <FONT ID="SingleLineComment">// start up all the controllers
+<FONT ID="LN">476 </FONT><A NAME="476"></A></FONT>            <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;controllerList.size();i++)
+<FONT ID="LN">477 </FONT><A NAME="477"></A>            {
+<FONT ID="LN">478 </FONT><A NAME="478"></A>                <A HREF="../interfaces/Controller.java.html">Controller</A> c=(<A HREF="../interfaces/Controller.java.html">Controller</A>)controllerList.get(i);
+<FONT ID="LN">479 </FONT><A NAME="479"></A>                Thread u=<FONT ID="New">new</FONT> Thread(c);
+<FONT ID="LN">480 </FONT><A NAME="480"></A>                u.setPriority(Thread.MIN_PRIORITY);
+<FONT ID="LN">481 </FONT><A NAME="481"></A>                u.start();
+<FONT ID="LN">482 </FONT><A NAME="482"></A>                Intellego.addToLog(<FONT ID="StringLiteral">"SimUI.run(): Started controller"</FONT>);
+<FONT ID="LN">483 </FONT><A NAME="483"></A>            }
+<FONT ID="LN">484 </FONT><A NAME="484"></A>        }
+<FONT ID="LN">485 </FONT><A NAME="485"></A>    }
+<FONT ID="LN">486 </FONT><A NAME="486"></A>    
+<FONT ID="LN">487 </FONT><A NAME="487"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">488 </FONT><A NAME="488"></A>    * Stops this simulation
+<FONT ID="LN">489 </FONT><A NAME="489"></A>    */</FONT>
+<FONT ID="LN">490 </FONT><A NAME="490"></A>    <FONT ID="Public">public</FONT> <FONT ID="Void">void</FONT> stopSimulation()
+<FONT ID="LN">491 </FONT><A NAME="491"></A>    {
+<FONT ID="LN">492 </FONT><A NAME="492"></A>        <FONT ID="SingleLineComment">// check there is a simworld and a simdisplay open
+<FONT ID="LN">493 </FONT><A NAME="493"></A></FONT>        <FONT ID="If">if</FONT> (world==<FONT ID="Null">null</FONT> || display==<FONT ID="Null">null</FONT>)
+<FONT ID="LN">494 </FONT><A NAME="494"></A>        {
+<FONT ID="LN">495 </FONT><A NAME="495"></A>            <FONT ID="SingleLineComment">// if not display an error message
+<FONT ID="LN">496 </FONT><A NAME="496"></A></FONT>            MainInterface.displayMessage(<FONT ID="StringLiteral">"No simulation to stop"</FONT>);
+<FONT ID="LN">497 </FONT><A NAME="497"></A>        }
+<FONT ID="LN">498 </FONT><A NAME="498"></A>        <FONT ID="Else">else</FONT>
+<FONT ID="LN">499 </FONT><A NAME="499"></A>        {
+<FONT ID="LN">500 </FONT><A NAME="500"></A>            running=<FONT ID="False">false</FONT>;
+<FONT ID="LN">501 </FONT><A NAME="501"></A>            
+<FONT ID="LN">502 </FONT><A NAME="502"></A>            <FONT ID="SingleLineComment">// stop all the controllers
+<FONT ID="LN">503 </FONT><A NAME="503"></A></FONT>            <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;controllerList.size();i++)
+<FONT ID="LN">504 </FONT><A NAME="504"></A>            {
+<FONT ID="LN">505 </FONT><A NAME="505"></A>                <A HREF="../interfaces/Controller.java.html">Controller</A> c=(<A HREF="../interfaces/Controller.java.html">Controller</A>)controllerList.get(i);
+<FONT ID="LN">506 </FONT><A NAME="506"></A>                c.halt();
+<FONT ID="LN">507 </FONT><A NAME="507"></A>            }
+<FONT ID="LN">508 </FONT><A NAME="508"></A>        }
+<FONT ID="LN">509 </FONT><A NAME="509"></A>    }
+<FONT ID="LN">510 </FONT><A NAME="510"></A>
+<FONT ID="LN">511 </FONT><A NAME="511"></A>
+<FONT ID="LN">512 </FONT><A NAME="512"></A>
+<FONT ID="LN">513 </FONT><A NAME="513"></A>}
+<FONT ID="LN">514 </FONT><A NAME="514"></A></pre><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SimUI</font>
+</td>
+<td align="right" colspan="2" width="33%"></td>
+</tr>
+</TABLE>
+
+</BODY>
+</HTML>
