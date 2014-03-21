@@ -22,7 +22,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 import lejos.platform.rcx.*;
-import lejos.util.*;
+import lejos.robotics.*;
 
 /**
 * Example of a Intellejos robot that uses Lejos classes
@@ -30,26 +30,11 @@ import lejos.util.*;
 * @author Tijn Kooijmans
 */
 
-public class Jojo implements TimerListener
+public class TimeNavi extends Thread
 {
-
-	public Jojo()
+	public void run()
 	{
-		Motor.A.forward();
-		Motor.B.backward();
-
-		Timer t = new Timer(2000, this);
-		t.start();
-	}
-
-	public void timedOut()
-	{
-		Motor.A.reverseDirection();
-		Motor.B.reverseDirection();
-	}
-
-	public static void main(String[] args)
-	{
-		Jojo jj = new Jojo();
+		TimingNavigator tn = new TimingNavigator(Motor.A, Motor.B, 4, 4);
+		tn.gotoAngle(180);
 	}
 }
